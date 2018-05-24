@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """trivector
@@ -8,3 +8,5 @@ Scripts:
 Module:
  + :mod:`.trivector` -
 """
+
+from trivector.trivector import trivector
