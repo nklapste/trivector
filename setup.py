@@ -14,7 +14,6 @@ class PyTest(test):
 
     def initialize_options(self):
         test.initialize_options(self)
-        os.makedirs("test-reports", exist_ok=True)
         self.pytest_args = "-v --cov=trivector"
 
     def run_tests(self):
@@ -64,5 +63,5 @@ setup(
         "pytest-cov",
         "pytest-timeout",
     ],
-    cmdclass={'test': PyTest},
+    cmdclass={"test": PyTest},
 )
