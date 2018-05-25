@@ -8,6 +8,8 @@ import numpy
 from numpy import ndarray
 import svgwrite
 import cv2
+import progressbar
+from cairosvg import svg2png
 
 
 def upper_tri_sum(d3array: ndarray) -> numpy.array:
@@ -39,25 +41,30 @@ def lower_tri_sum(d3array: ndarray) -> numpy.array:
     return numpy.sum(tri, axis=0) // len(tri)
 
 
-def trivector(image_path: str, cut_size: int, right_diagonal: bool, left_diagonal: bool):
+def trivector(image_path: str, cut_size: int, right_diagonal: bool = False, left_diagonal: bool = False, output_path: str = None):
     """"""
     img = cv2.imread(image_path)
     image_name = os.path.basename(image_path)
     image_name, ext = os.path.splitext(image_name)
 
-    dwg = svgwrite.Drawing("{}_tri_{}.svg".format(image_name, cut_size), profile="tiny")
+    if not output_path:
+        output_path = os.path.join(os.getcwd(), "{}_tri_{}.svg".format(image_name, cut_size))
+    dwg = svgwrite.Drawing(output_path, profile="full")
 
     height, width, channels = img.shape
-    diff = width // cut_size
-    adjusted_width = (diff+1)*cut_size
-    diff = height // cut_size
-    adjusted_height = (diff+1)*cut_size
-    dwg.viewbox(width=adjusted_width, height=adjusted_height)
 
+    width_slices = range(0, width, cut_size)
+    height_slices = range(0, height, cut_size)
+    dwg.viewbox(width=len(width_slices)*cut_size, height=len(height_slices)*cut_size)
+    bar = progressbar.ProgressBar(max_value=len(width_slices)*len(height_slices))
     counter2 = 0
-    for y in range(0, height, cut_size):
+    sector_num = 0
+
+
+    for y in height_slices:
         counter = counter2
-        for x in range(0, width, cut_size):
+        for x in width_slices:
+
             sub_img = img[y:y + cut_size, x:x + cut_size]
             if left_diagonal or (not right_diagonal and counter % 2):
                 tri_color = upper_tri_sum(sub_img)
@@ -69,7 +76,6 @@ def trivector(image_path: str, cut_size: int, right_diagonal: bool, left_diagona
                         fill=svgwrite.rgb(r, g, b, 'RGB')
                     )
                 )
-
                 tri_color = lower_tri_sum(sub_img)
                 b, g, r = tri_color
                 dwg.add(
@@ -96,11 +102,19 @@ def trivector(image_path: str, cut_size: int, right_diagonal: bool, left_diagona
                 b, g, r = tri_color
                 dwg.add(
                     dwg.polygon(
-                        [(x, y), (x, y + cut_size), (x+ cut_size, y)],
+                        [(x, y), (x, y + cut_size), (x + cut_size, y)],
                         stroke=svgwrite.rgb(r, g, b, 'RGB'),
                         fill=svgwrite.rgb(r, g, b, 'RGB')
                     )
                 )
+            sector_num += 1
+            bar.update(sector_num)
             counter += 1
         counter2 += 1
     dwg.save()
+    filename, file_extension = os.path.splitext(output_path)
+    svg2png(open(output_path, 'rb').read(), write_to=open(filename+os.extsep+"png", 'wb'))
+
+
+if __name__ == "__main__":
+    trivector("../images/me2.png", 45)

@@ -56,7 +56,9 @@ setup(
     install_requires=[
         "svgwrite>=1.1.12,<2.0.0",
         "opencv-python>=3.4.1.15,<4.0.0.0",
-        "numpy>=1.14.3,<2.0.0"
+        "numpy>=1.14.3,<2.0.0",
+        "progressbar2>=3.37.1,<4.0.0",
+        "CairoSVG>=2.1.3,<3.0.0",
     ],
     tests_require=[
         "pytest",
