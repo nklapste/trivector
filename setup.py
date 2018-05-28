@@ -9,6 +9,12 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test
 
 
+class Pylint(test):
+    def run_tests(self):
+        from pylint.lint import Run
+        Run(["trivector", "--persistent", "y"])
+
+
 class PyTest(test):
     user_options = [('pytest-args=', 'a', "Arguments to pass to pytest")]
 
@@ -64,6 +70,7 @@ setup(
         "pytest",
         "pytest-cov",
         "pytest-timeout",
+        "pylint>=1.9.1,<2.0.0"
     ],
-    cmdclass={"test": PyTest},
+    cmdclass={"test": PyTest, "lint": Pylint},
 )
