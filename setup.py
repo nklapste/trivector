@@ -58,6 +58,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
+        "Topic :: Multimedia :: Graphics :: Graphics Conversion",
     ],
     install_requires=[
         "svgwrite>=1.1.12,<2.0.0",
