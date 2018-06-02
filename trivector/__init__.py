@@ -10,3 +10,6 @@ Module:
 """
 
 from trivector.trivector import trivector
+
+
+__version__ = (0, 0, 0)
