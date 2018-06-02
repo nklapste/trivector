@@ -8,7 +8,6 @@ from enum import Enum
 
 import numpy
 from numpy import ndarray, array
-
 import svgwrite
 from svgwrite import Drawing
 
@@ -17,7 +16,7 @@ import progressbar
 from cairosvg import svg2png
 
 
-def upper_tri_sum(d3array: ndarray) -> array:
+def upper_tri_sum(d3array: ndarray) -> ndarray:
     """Get a 3D image array's upper diagonal's pixel color average
 
     :param d3array: a 3D image array derived from :func:`cv2.imread`
@@ -38,7 +37,7 @@ def upper_tri_sum(d3array: ndarray) -> array:
     return numpy.sum(tri, axis=0) // len(tri)
 
 
-def lower_tri_sum(d3array: ndarray) -> array:
+def lower_tri_sum(d3array: ndarray) -> ndarray:
     """Get a 3D image array's lower diagonal's pixel color average
 
     :param d3array: a 3D image array derived from :func:`cv2.imread`
