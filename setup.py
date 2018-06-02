@@ -3,10 +3,46 @@
 
 """setup.py for trivector"""
 
+import codecs
+import re
 import sys
 import os
 from setuptools import setup, find_packages
 from setuptools.command.test import test
+
+
+def find_version(*file_paths):
+    with codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *file_paths), 'r') as fp:
+        version_file = fp.read()
+    m = re.search(r"^__version__ = \((\d+), ?(\d+), ?(\d+)\)", version_file, re.M)
+    if m:
+        return "{}.{}.{}".format(*m.groups())
+    raise RuntimeError("Unable to find a valid version")
+
+
+NAME = "trivector"
+SAFE_NAME = NAME.replace("-", "_")
+VERSION = find_version(SAFE_NAME, "__init__.py")
+
+
+class Sphinx(test):
+    def run_tests(self):
+        from sphinx.ext.apidoc import main as apidoc
+        from sphinx.cmd.build import build_main
+
+        # generate api docs
+        apidoc(["--module-first", "--separate", "--output-dir", "doc/api",
+                "--implicit-namespaces", SAFE_NAME])
+
+        # build sphinx
+        build_main(
+            [
+                "doc", "build/sphinx", "-E",
+                "-D", "version={}".format(VERSION[:3]),
+                "-D", "release={}".format(VERSION),
+                "-D", "project={}".format(NAME)
+            ]
+        )
 
 
 class Pylint(test):
@@ -20,7 +56,7 @@ class PyTest(test):
 
     def initialize_options(self):
         test.initialize_options(self)
-        self.pytest_args = "-v --cov=trivector"
+        self.pytest_args = "-v --cov={}".format(SAFE_NAME)
 
     def run_tests(self):
         import shlex
@@ -36,13 +72,13 @@ def readme():
 
 
 setup(
-    name="trivector",
-    version="0.0.0",
+    name=NAME,
+    version=VERSION,
     description="",  # TODO
     long_description=readme(),
     author="Nathan Klapstein",
     author_email="nklapste@ualberta.ca",
-    url="https://github.com/nklapste/trivector",  # TODO
+    url="https://github.com/nklapste/trivector",
     download_url="https://github.com/nklapste/trivector/",  # TODO
     packages=find_packages(exclude=["test"]),
     include_package_data=True,
@@ -72,7 +108,11 @@ setup(
         "pytest",
         "pytest-cov",
         "pytest-timeout",
-        "pylint>=1.9.1,<2.0.0"
+        "pylint>=1.9.1,<2.0.0",
+        "sphinx>=1.7.5,<2.0.0",
+        "sphinx_rtd_theme>=0.3.1,<1.0.0",
+        "sphinx-autodoc-typehints>=1.3.0,<2.0.0",
+        "sphinx-argparse>=0.2.2,<1.0.0"
     ],
-    cmdclass={"test": PyTest, "lint": Pylint},
+    cmdclass={"build_sphinx": Sphinx, "test": PyTest, "lint": Pylint},
 )
