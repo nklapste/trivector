@@ -10,16 +10,19 @@ import sys
 from trivector.trivector import trivector, DiagonalStyle
 
 
-def main():
-    """argparse function for trivector"""
-    parser = argparse.ArgumentParser()
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description="Convert an image into a vector image composed of triangles"
+    )
     parser.add_argument("image", help="Path to the image to trivector")
-    parser.add_argument("-o", "--output", default=os.path.join(os.getcwd(), "<image_name>_tri_<cut_size>.<svg & png>"),
+    parser.add_argument("-o", "--output", default=os.path.join(os.getcwd(),
+                               "<image_name>_tri_<cut_size>.<svg & png>"),
                         help="Path to output the trivectored image "
                              "(default: %(default)s)")
 
     group = parser.add_argument_group("Image Generation Options")
-    group.add_argument("-c", "--cut-size", dest="cut_size", type=int, required=True,
+    group.add_argument("-c", "--cut-size", dest="cut_size", type=int,
+                       required=True,
                        help="Size in pixels for each triangle sector "
                             "(smaller==more triangles)")
     group.add_argument("-d", "--diagonal-style", dest="diagonal_style",
@@ -27,8 +30,13 @@ def main():
                        default=DiagonalStyle.alternating.value,
                        help="Styling on how to arrange the triangle "
                             "sectors diagonals (default: %(default)s)")
+    return parser
 
-    args = parser.parse_args()
+
+def main(argv=sys.argv[1:]):
+    """argparse function for trivector"""
+    parser = get_parser()
+    args = parser.parse_args(argv)
 
     trivector(
         image_path=args.image,
