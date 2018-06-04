@@ -123,7 +123,7 @@ class DiagonalStyle(Enum):
         return self.value
 
 
-def trivector(image_path: str, cut_size: int, output_path: str = None,
+def trivector(image_path: str, cut_size: int, output_path: str,
               diagonal_style: DiagonalStyle = DiagonalStyle.alternating):
     """Convert an image into a vector image composed of triangles
 
@@ -134,16 +134,10 @@ def trivector(image_path: str, cut_size: int, output_path: str = None,
         (smaller==more triangles)
     :param diagonal_style: a :class:`DiagonalStyle` styling noting on how to
         arrange the triangle sectors diagonals
-    :param output_path: path to write the output images to (note: extension
-        defaults to ``.svg``)
+    :param output_path: path to write the output image to
     """
     img = cv2.imread(image_path)
-    image_name = os.path.basename(image_path)
-    image_name, _ = os.path.splitext(image_name)
-
-    if not output_path:
-        output_path = os.path.join(os.getcwd(), "{}_tri_{}".format(image_name, cut_size))
-    dwg = svgwrite.Drawing(output_path+".svg", profile="full")
+    dwg = svgwrite.Drawing(output_path, profile="full")
 
     height, width, channels = img.shape
 

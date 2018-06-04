@@ -17,10 +17,9 @@ def get_parser():
                     "of triangles"
     )
     parser.add_argument("image", help="Path to the image to trivector")
-    parser.add_argument("-o", "--output", default=os.path.join(os.getcwd(),
+    parser.add_argument("-o", "--output", default=os.path.join(".",
                                "<image_name>_tri_<cut_size>.svg"),
                         help="Path to output the trivectored image "
-                             "(note: extension defaults to ``.svg``)"
                              "(default: %(default)s)")
 
     group = parser.add_argument_group("Image Generation Options")
@@ -41,9 +40,21 @@ def main(argv=sys.argv[1:]):
     parser = get_parser()
     args = parser.parse_args(argv)
 
+    # generate or get the output image name
+    image_name = os.path.basename(args.image)
+    image_name, _ = os.path.splitext(image_name)
+    if not args.output:
+        output_path = os.path.join(
+            os.getcwd(),
+            "{}_tri_{}.svg".format(args.image, args.cut_size)
+        )
+    else:
+        output_path = args.output
+
     trivector(
         image_path=args.image,
         cut_size=args.cut_size,
+        output_path=output_path,
         diagonal_style=args.diagonal_style
     )
 
