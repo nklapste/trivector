@@ -11,6 +11,7 @@ from trivector.trivector import trivector, DiagonalStyle
 
 
 def get_parser():
+    """Create and return the argparser for trivector"""
     parser = argparse.ArgumentParser(
         description="Convert an image into a vector image composed of triangles"
     )
