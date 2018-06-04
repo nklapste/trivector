@@ -7,7 +7,7 @@ import os
 from enum import Enum
 
 import numpy
-from numpy import ndarray, array
+from numpy import ndarray
 import svgwrite
 from svgwrite import Drawing
 
