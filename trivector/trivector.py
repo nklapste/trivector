@@ -3,7 +3,6 @@
 
 """Convert an image into a ``.svg`` vector image composed of triangles"""
 
-import os
 from enum import Enum
 
 import numpy
@@ -148,26 +147,21 @@ def trivector(image_path: str, cut_size: int, output_path: str,
     # start up the progress bar
     # each image sector is one tick one the progress bar
     bar = progressbar.ProgressBar(max_value=len(width_slices)*len(height_slices))
-    counter2 = 0
+    counter_2 = 0
     sector_num = 0
     for y in height_slices:
-
-        counter = counter2
+        counter_1 = counter_2
+        counter_2 += 1
         for x in width_slices:
-
             sub_img = img[y:y + cut_size, x:x + cut_size]
             if (diagonal_style == DiagonalStyle.left) or \
-                    (diagonal_style == DiagonalStyle.alternating and counter % 2):
+                    (diagonal_style == DiagonalStyle.alternating and counter_1 % 2):
                 vectorize_sector_left(sub_img, dwg, x, y, cut_size)
-            elif (diagonal_style == DiagonalStyle.right) or \
-                    (diagonal_style == DiagonalStyle.alternating and not counter % 2):
+            else:
                 sub_img = numpy.rot90(sub_img, axes=(0, 1))
                 vectorize_sector_right(sub_img, dwg, x, y, cut_size)
-            else:
-                raise TypeError("diagonal_style is invalid")
             sector_num += 1
+            counter_1 += 1
             bar.update(sector_num)
-            counter += 1
-        counter2 += 1
 
     dwg.save()
