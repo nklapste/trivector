@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""Convert an image into a vector image composed of triangles"""
+"""Convert an image into a ``.svg`` vector image composed of triangles"""
 
 import os
 from enum import Enum
@@ -13,7 +13,6 @@ from svgwrite import Drawing
 
 import cv2
 import progressbar
-from cairosvg import svg2png
 
 
 def upper_tri_sum(d3array: ndarray) -> ndarray:
@@ -128,14 +127,15 @@ def trivector(image_path: str, cut_size: int, output_path: str = None,
               diagonal_style: DiagonalStyle = DiagonalStyle.alternating):
     """Convert an image into a vector image composed of triangles
 
-    Save the vector image as both a ``.svg`` and ``.png``.
+    Save the vector image as a ``.svg``.
 
     :param image_path: path to the image to convert to a vector image
     :param cut_size: size in pixels for each triangle sector
         (smaller==more triangles)
     :param diagonal_style: a :class:`DiagonalStyle` styling noting on how to
         arrange the triangle sectors diagonals
-    :param output_path: path to write the output images to
+    :param output_path: path to write the output images to (note: extension
+        not required)
     """
     img = cv2.imread(image_path)
     image_name = os.path.basename(image_path)
@@ -177,4 +177,3 @@ def trivector(image_path: str, cut_size: int, output_path: str = None,
         counter2 += 1
 
     dwg.save()
-    svg2png(open(output_path+".svg", "rb").read(), write_to=open(output_path+".png", "wb"))
