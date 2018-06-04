@@ -19,10 +19,10 @@ def get_parser():
     parser.add_argument("image", help="Path to the image to trivector")
 
     group = parser.add_argument_group("Image Generation Options")
-    group.add_argument("-o", "--output", default=os.path.join(".",
-                               "<image_name>_tri_<cut_size>.svg"),
-                        help="Path to output the trivectored image "
-                             "(default: %(default)s)")
+    group.add_argument("-o", "--output", default=os.path.join(
+                       ".", "<image_name>_tri_<cut_size>.svg"),
+                       help="Path to output the trivectored image "
+                            "(default: %(default)s)")
     group.add_argument("-c", "--cut-size", dest="cut_size", type=int,
                        required=True,
                        help="Size in pixels for each triangle sector "

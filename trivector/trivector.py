@@ -66,7 +66,7 @@ def lower_tri_sum(d3array: ndarray) -> ndarray:
 
 
 def vectorize_sector_left(sub_img: ndarray, dwg: Drawing,
-                     x: int, y: int, cut_size: int):
+                          x: int, y: int, cut_size: int):
     """Add two triangles to ``dwg`` whose colors are derived from the color
     averages from the top and bottom diagonals of the 3D BGR image array of
     the sub image"""
