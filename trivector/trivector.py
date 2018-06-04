@@ -135,7 +135,7 @@ def trivector(image_path: str, cut_size: int, output_path: str = None,
     :param diagonal_style: a :class:`DiagonalStyle` styling noting on how to
         arrange the triangle sectors diagonals
     :param output_path: path to write the output images to (note: extension
-        not required)
+        defaults to ``.svg``)
     """
     img = cv2.imread(image_path)
     image_name = os.path.basename(image_path)

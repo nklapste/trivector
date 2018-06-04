@@ -3,6 +3,8 @@
 
 """trivector
 
+Convert an image into a ``.svg`` vector image composed of triangles.
+
 Scripts:
  + :mod:`.__main__` - argparse entry point
 Module:

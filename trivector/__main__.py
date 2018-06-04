@@ -13,12 +13,14 @@ from trivector.trivector import trivector, DiagonalStyle
 def get_parser():
     """Create and return the argparser for trivector"""
     parser = argparse.ArgumentParser(
-        description="Convert an image into a vector image composed of triangles"
+        description="Convert an image into a ``.svg`` vector image composed "
+                    "of triangles"
     )
     parser.add_argument("image", help="Path to the image to trivector")
     parser.add_argument("-o", "--output", default=os.path.join(os.getcwd(),
-                               "<image_name>_tri_<cut_size>.<svg & png>"),
+                               "<image_name>_tri_<cut_size>.svg"),
                         help="Path to output the trivectored image "
+                             "(note: extension defaults to ``.svg``)"
                              "(default: %(default)s)")
 
     group = parser.add_argument_group("Image Generation Options")

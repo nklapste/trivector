@@ -5,7 +5,8 @@ trivector
 Description
 ===========
 
-Convert an image into a vector image composed of triangles.
+Convert an image into a ``.svg`` vector image composed of triangles.
+
 
 Requirements
 ============
