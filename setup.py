@@ -75,12 +75,11 @@ def readme():
 setup(
     name=NAME,
     version=VERSION,
-    description="",  # TODO
+    description=DESCRIPTION,
     long_description=readme(),
     author="Nathan Klapstein",
     author_email="nklapste@ualberta.ca",
     url="https://github.com/nklapste/trivector",
-    download_url="https://github.com/nklapste/trivector/",  # TODO
     packages=find_packages(exclude=["test"]),
     include_package_data=True,
     package_data={
