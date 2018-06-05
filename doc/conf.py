@@ -133,3 +133,18 @@ intersphinx_mapping = {
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'cv2': ('http://docs.opencv.org/2.4/', None),
 }
+
+
+# -- auto api doc generation --
+def run_apidoc(_):
+    from sphinx.ext.apidoc import main
+    import os
+    import sys
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    cur_dir = os.path.abspath(os.path.dirname(__file__))
+    module = os.path.join(cur_dir, "..", "trivector")
+    main(["--implicit-namespaces", module, "--output-dir", "api"])
+
+
+def setup(app):
+    app.connect('builder-inited', run_apidoc)
