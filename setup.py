@@ -103,15 +103,19 @@ setup(
         "numpy>=1.14.3,<2.0.0",
         "progressbar2>=3.37.1,<4.0.0",
     ],
+    extras_require={
+        "docs": [
+            "sphinx>=1.7.5,<2.0.0",
+            "sphinx_rtd_theme>=0.3.1,<1.0.0",
+            "sphinx-autodoc-typehints>=1.3.0,<2.0.0",
+            "sphinx-argparse>=0.2.2,<1.0.0",
+        ]
+    },
     tests_require=[
         "pytest",
         "pytest-cov",
         "pytest-timeout",
         "pylint>=1.9.1,<2.0.0",
-        "sphinx>=1.7.5,<2.0.0",
-        "sphinx_rtd_theme>=0.3.1,<1.0.0",
-        "sphinx-autodoc-typehints>=1.3.0,<2.0.0",
-        "sphinx-argparse>=0.2.2,<1.0.0"
     ],
     cmdclass={"build_sphinx": Sphinx, "test": PyTest, "lint": Pylint},
 )
