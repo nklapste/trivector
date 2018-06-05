@@ -135,7 +135,7 @@ def trivector(image_path: str, cut_size: int, output_path: str,
         arrange the triangle sectors diagonals
     :param output_path: path to write the output image to
     """
-    img = cv2.imread(image_path)
+    img = cv2.imread(image_path)  #pylint:disable=no-member
     dwg = svgwrite.Drawing(output_path, profile="full")
 
     height, width, channels = img.shape
