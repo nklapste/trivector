@@ -20,16 +20,13 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find a valid version")
 
 
-NAME = "trivector"
-SAFE_NAME = NAME.replace("-", "_")
-VERSION = find_version(SAFE_NAME, "__init__.py")
-DESCRIPTION = "Convert an image into a ``.svg`` vector image composed of triangles"
+VERSION = find_version("trivector", "__init__.py")
 
 
 class Pylint(test):
     def run_tests(self):
         from pylint.lint import Run
-        Run([SAFE_NAME, "--persistent", "y"])
+        Run(["trivector", "--persistent", "y"])
 
 
 class PyTest(test):
@@ -37,7 +34,7 @@ class PyTest(test):
 
     def initialize_options(self):
         test.initialize_options(self)
-        self.pytest_args = "-v --cov={}".format(SAFE_NAME)
+        self.pytest_args = "-v --cov={}".format("trivector")
 
     def run_tests(self):
         import shlex
@@ -53,9 +50,9 @@ def readme():
 
 
 setup(
-    name=NAME,
+    name="trivector",
     version=VERSION,
-    description=DESCRIPTION,
+    description="Convert an image into a ``.svg`` vector image composed of triangles",
     long_description=readme(),
     author="Nathan Klapstein",
     author_email="nklapste@ualberta.ca",

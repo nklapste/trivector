@@ -22,9 +22,7 @@ release = "0.0.0"
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
     "sphinx.ext.intersphinx",
     "sphinx_autodoc_typehints",
     "sphinxarg.ext",
@@ -111,8 +109,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'trivector', 'trivector Documentation',
-     [author], 1)
+    (master_doc, 'trivector', 'trivector Documentation', [author], 1)
 ]
 
 
@@ -123,7 +120,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'trivector', 'trivector Documentation',
-     author, 'trivector', 'One line description of project.',
+     author, 'trivector', "Convert an image into a ``.svg`` vector image composed of triangles",
      'Miscellaneous'),
 ]
 
