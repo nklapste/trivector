@@ -19,14 +19,14 @@ install:
     paths:
       - trivector.egg.info/
   script:
-    - exit pip install -e .["docs","tests"]
+    - pip install -e .["docs","tests"]
 
 
 lint:
   stage: test
   script:
     - pip install -e .["tests"]
-    - exit python setup.py lint
+    - python setup.py lint
 
 
 test:
@@ -36,7 +36,7 @@ test:
       - .pytest_cache/
   script:
     - pip install -e .["tests"]
-    - exit python setup.py test
+    - python setup.py test
 
 
 build:
@@ -45,7 +45,7 @@ build:
     paths:
     - dist/
   script:
-    - exit python setup.py sdist
+    - python setup.py sdist
 
 
 document:
@@ -56,7 +56,7 @@ document:
      - doc/api/
   script:
     - pip install -e .["docs"]
-    - exit sphinx-build doc/ build/
+    - sphinx-build doc/ build/
 
 
 upload:
