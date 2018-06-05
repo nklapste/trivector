@@ -86,13 +86,13 @@ setup(
             "sphinx_rtd_theme>=0.3.1,<1.0.0",
             "sphinx-autodoc-typehints>=1.3.0,<2.0.0",
             "sphinx-argparse>=0.2.2,<1.0.0",
+        ],
+        "tests": [
+            "pytest",
+            "pytest-cov",
+            "pytest-timeout",
+            "pylint>=1.9.1,<2.0.0",
         ]
     },
-    tests_require=[
-        "pytest",
-        "pytest-cov",
-        "pytest-timeout",
-        "pylint>=1.9.1,<2.0.0",
-    ],
     cmdclass={"test": PyTest, "lint": Pylint},
 )
