@@ -26,26 +26,6 @@ VERSION = find_version(SAFE_NAME, "__init__.py")
 DESCRIPTION = "Convert an image into a ``.svg`` vector image composed of triangles"
 
 
-class Sphinx(test):
-    def run_tests(self):
-        from sphinx.ext.apidoc import main as apidoc
-        from sphinx.cmd.build import build_main
-
-        # generate api docs
-        apidoc(["--module-first", "--separate", "--output-dir", "doc/api",
-                "--implicit-namespaces", SAFE_NAME])
-
-        # build sphinx
-        build_main(
-            [
-                "doc", "build/sphinx", "-E",
-                "-D", "version={}".format(VERSION[:3]),
-                "-D", "release={}".format(VERSION),
-                "-D", "project={}".format(NAME)
-            ]
-        )
-
-
 class Pylint(test):
     def run_tests(self):
         from pylint.lint import Run
@@ -117,5 +97,5 @@ setup(
         "pytest-timeout",
         "pylint>=1.9.1,<2.0.0",
     ],
-    cmdclass={"build_sphinx": Sphinx, "test": PyTest, "lint": Pylint},
+    cmdclass={"test": PyTest, "lint": Pylint},
 )
