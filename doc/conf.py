@@ -11,7 +11,9 @@
 
 copyright = '2018, Nathan Klapstein'
 author = 'Nathan Klapstein'
-
+project = "trivector"
+version = "0.0"
+release = "0.0.0"
 
 # -- General configuration ---------------------------------------------------
 
