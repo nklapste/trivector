@@ -1,20 +1,20 @@
 image: python:3.6
 
 stages:
-  - build
+  - install
   - test
+  - build
   - deploy
 
 
 before_script:
-  - apt-get update -q -y
   - mkdir -p .venv
   - python -m venv .venv
   - source .venv/bin/activate
 
 
 install:
-  stage: test
+  stage: install
   artifacts:
     paths:
       - trivector.egg.info/
