@@ -24,7 +24,6 @@ lint:
   stage: test
   script:
     - pip install -e .["tests"]
-    - pip install pylint
     - exit python setup.py lint
 
 
@@ -35,7 +34,6 @@ test:
       - .pytest_cache/
   script:
     - pip install -e .["tests"]
-    - pip install pytest pytest-cov pytest-timeout
     - exit python setup.py test
 
 
@@ -49,7 +47,7 @@ build:
 
 
 document:
-  state: deploy
+  stage: deploy
   artifacts:
     paths:
      - build/
@@ -60,7 +58,7 @@ document:
 
 
 upload:
-  state: deploy
+  stage: deploy
   only:
     - tags
   script:
