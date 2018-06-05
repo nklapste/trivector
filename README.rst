@@ -6,6 +6,10 @@ trivector
     :target: https://trivector.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://landscape.io/github/nklapste/trivector/master/landscape.svg?style=flat
+    :target: https://landscape.io/github/nklapste/trivector/master
+    :alt: Code Health
+
 
 Description
 ===========
