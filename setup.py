@@ -29,7 +29,7 @@ DESCRIPTION = "Convert an image into a ``.svg`` vector image composed of triangl
 class Pylint(test):
     def run_tests(self):
         from pylint.lint import Run
-        Run(["trivector", "--persistent", "y"])
+        Run([SAFE_NAME, "--persistent", "y"])
 
 
 class PyTest(test):
