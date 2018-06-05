@@ -26,7 +26,7 @@ VERSION = find_version("trivector", "__init__.py")
 class Pylint(test):
     def run_tests(self):
         from pylint.lint import Run
-        Run(["trivector", "--persistent", "y"])
+        errno = Run(["trivector", "--persistent", "y", "--rcfile", ".pylintrc"])
 
 
 class PyTest(test):
