@@ -1,0 +1,67 @@
+stages:
+  - build
+  - test
+  - deploy
+
+
+before_script:
+  - apt-get install -y python3-dev python3-pip
+  - mkdir -p .venv
+  - python -m venv .venv
+  - source .venv/bin/activate
+
+
+install:
+  stage: test
+  artifacts:
+    paths:
+      - trivector.egg.info/
+  script:
+    - exit pip install -e .["docs","tests"]
+
+
+lint:
+  stage: test
+  script:
+    - pip install -e .["tests"]
+    - pip install pylint
+    - exit python setup.py lint
+
+
+test:
+  stage: test
+  artifacts:
+    paths:
+      - .pytest_cache/
+  script:
+    - pip install -e .["tests"]
+    - pip install pytest pytest-cov pytest-timeout
+    - exit python setup.py test
+
+
+build:
+  stage: deploy
+  artifacts:
+    paths:
+    - dist/
+  script:
+    - exit python setup.py sdist
+
+
+document:
+  state: deploy
+  artifacts:
+    paths:
+     - build/
+     - doc/api/
+  script:
+    - pip install -e .["docs"]
+    - exit sphinx-build doc/ build/
+
+
+upload:
+  state: deploy
+  only:
+    - tags
+  script:
+    - echo TODO
