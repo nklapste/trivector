@@ -3,8 +3,8 @@ trivector
 *********
 
 .. image:: https://readthedocs.org/projects/trivector/badge/?version=latest
-:target: https://trivector.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+    :target: https://trivector.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 
 Description
