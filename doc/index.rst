@@ -6,6 +6,10 @@
 Welcome to trivector's documentation!
 =====================================
 
+This code is open source, and is `available on GitHub`_.
+
+.. _available on GitHub: https://github.com/nklapste/trivector
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -13,6 +17,7 @@ Welcome to trivector's documentation!
    Overview<readme>
    Modules<api/modules>
    Command Line Usage<commands>
+
 
 Indices and tables
 ==================
