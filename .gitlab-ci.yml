@@ -17,7 +17,7 @@ install:
   stage: install
   artifacts:
     paths:
-      - trivector.egg.info/
+      - trivector.egg-info/
   script:
     - pip install -e .["docs","tests"]
 
@@ -26,7 +26,7 @@ lint:
   stage: test
   script:
     - pip install -e .["tests"]
-    - python setup.py lint
+    - python setup.py lint  || if [$? -ne 2] && [$? -ne 1]; then echo "success"; else exit $?; fi
 
 
 test:
