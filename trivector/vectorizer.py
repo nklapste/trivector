@@ -84,6 +84,7 @@ class Style(Enum):
 
 
 class Sector:
+    """A image sector for the Vectorizer"""
     def __init__(self, image: ndarray, x_pos: int, y_pos: int):
         self.image = image
         self.x_pos = x_pos
@@ -149,12 +150,12 @@ class Vectorizer:
                     y_pos=y
                 )
 
-    def vectorize(self):
+    def run(self):
         """Run the Vectorizer"""
         bar = progressbar.ProgressBar(
             max_value=len(self.width_slices) * len(self.height_slices))
-        counter_2 = 0
         sector_num = 0
+        counter_2 = 0
         for y in self.height_slices:
             counter_1 = counter_2
             counter_2 += 1
