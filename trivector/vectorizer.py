@@ -95,33 +95,44 @@ class Sector:
 
 
 class Vectorizer:
-    def __init__(self, image_path: str, cut_size: int, output_path: str = "unnamed.svg",
-                 stroke_color: Tuple[int, int, int] = None, stroke_width: int = 0, style: Style = Style.tri_alternating):
-        """
+    def __init__(self, image_path: str, cut_size: int,
+                 output_path: str = "unnamed.svg",
+                 style: Style = Style.tri_alternating,
+                 stroke_color: Tuple[int, int, int] = None,
+                 stroke_width: int = 0):
+        """Initialize the Vectorizer
+
+        Read the image given at ``image_path`` and setup image data needed
+        to run the Vectorizer.
+
+        .. note::
+            Avoid making ``cut_size`` be small (eg: 2) for very large images.
+            As run times can quickly increase.
 
         :param image_path: path to the image to read
         :param cut_size: size in pixels for each sector
         :param output_path: path to output the vector image. Can be overridden
             by the usage  of the ``output_path`` parameter in
             :meth:`Vectorizer.save`.
-        :param stroke_width:
         :param style: styling option for composing vectorized sectors
+        :param stroke_width:
+        :param stroke_color:
         """
         self.image = cv2.imread(image_path)  # pylint: disable=no-member
-        self.drawing = svgwrite.Drawing(output_path, profile="full")
+        self.output_path = output_path
+        self.cut_size = cut_size
         self.style = style
+
         self.stroke_width = stroke_width
         if stroke_color:
             self.stroke_color = svgwrite.rgb(*stroke_color)
         else:
             self.stroke_color = None
-        self.cut_size = cut_size
-        self.output_path = output_path
 
         height, width, _ = self.image.shape
-
         self.width_slices = list(range(0, width, self.cut_size))
         self.height_slices = list(range(0, height, self.cut_size))
+        self.drawing = svgwrite.Drawing(self.output_path, profile="full")
         self.drawing.viewbox(
             width=len(self.width_slices) * self.cut_size,
             height=len(self.height_slices) * self.cut_size
@@ -172,16 +183,25 @@ class Vectorizer:
         b, g, r = upper_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
-                [(x, y), (x + self.cut_size, y), (x + self.cut_size, y + self.cut_size)],
+                [
+                    (x, y),
+                    (x + self.cut_size, y),
+                    (x + self.cut_size, y + self.cut_size)
+                ],
                 stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
+
         b, g, r = lower_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
-                [(x, y), (x, y + self.cut_size), (x + self.cut_size, y + self.cut_size)],
+                [
+                    (x, y),
+                    (x, y + self.cut_size),
+                    (x + self.cut_size, y + self.cut_size)
+                ],
                 stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
@@ -193,17 +213,25 @@ class Vectorizer:
         b, g, r = upper_tri_sum(numpy.rot90(sector.image, axes=(0, 1)))
         self.drawing.add(
             self.drawing.polygon(
-                [(x, y + self.cut_size), (x + self.cut_size, y + self.cut_size),
-                 (x + self.cut_size, y)],
+                [
+                    (x, y + self.cut_size),
+                    (x + self.cut_size, y + self.cut_size),
+                    (x + self.cut_size, y)
+                ],
                 stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
+
         b, g, r = lower_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
-                [(x, y + self.cut_size), (x, y), (x + self.cut_size, y)],
+                [
+                    (x, y + self.cut_size),
+                    (x, y),
+                    (x + self.cut_size, y)
+                ],
                 stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
