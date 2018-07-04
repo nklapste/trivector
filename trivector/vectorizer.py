@@ -1,8 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-""""""
+"""Convert an image into vector image by converting sub sections of the image
+into simple shapes"""
+
+import io
+from logging import getLogger
 from enum import Enum
+from typing import Generator, Tuple
 
 import cv2
 import numpy
@@ -10,6 +15,9 @@ import progressbar
 from numpy import ndarray
 import svgwrite
 from svgwrite.shapes import Rect, Circle
+
+
+__log__ = getLogger(__name__)
 
 
 def upper_tri_sum(d3array: ndarray) -> ndarray:
@@ -75,15 +83,40 @@ class Style(Enum):
         return self.value
 
 
+class Sector:
+    def __init__(self, image: ndarray, x_pos: int, y_pos: int):
+        self.image = image
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+
+    @property
+    def position(self):
+        return self.x_pos, self.y_pos
+
+
 class Vectorizer:
-    def __init__(self, image: str, cut_size: int, output_path: str = "unnamed.svg",
-                 stroke_width: int = 0, style: Style = Style.tri_alternating):
-        """"""
-        self.image = cv2.imread(image)  # pylint: disable=no-member
+    def __init__(self, image_path: str, cut_size: int, output_path: str = "unnamed.svg",
+                 stroke_color: Tuple[int, int, int] = None, stroke_width: int = 0, style: Style = Style.tri_alternating):
+        """
+
+        :param image_path: path to the image to read
+        :param cut_size: size in pixels for each sector
+        :param output_path: path to output the vector image. Can be overridden
+            by the usage  of the ``output_path`` parameter in
+            :meth:`Vectorizer.save`.
+        :param stroke_width:
+        :param style: styling option for composing vectorized sectors
+        """
+        self.image = cv2.imread(image_path)  # pylint: disable=no-member
         self.drawing = svgwrite.Drawing(output_path, profile="full")
         self.style = style
         self.stroke_width = stroke_width
+        if stroke_color:
+            self.stroke_color = svgwrite.rgb(*stroke_color)
+        else:
+            self.stroke_color = None
         self.cut_size = cut_size
+        self.output_path = output_path
 
         height, width, _ = self.image.shape
 
@@ -94,116 +127,127 @@ class Vectorizer:
             height=len(self.height_slices) * self.cut_size
         )
 
+    def sectors(self) -> Generator[Sector, None, None]:
+        """Return a generator of all the images sectors going from
+        the images top to bottom, left to right order"""
+        for y in self.height_slices:
+            for x in self.width_slices:
+                yield Sector(
+                    image=self.image[y:y + self.cut_size, x:x + self.cut_size],
+                    x_pos=x,
+                    y_pos=y
+                )
+
     def vectorize(self):
         """Run the Vectorizer"""
-        # start up the progress bar
-        # each image sector is one tick one the progress bar
         bar = progressbar.ProgressBar(
-            prefix="Vectorizing |",
-            max_value=len(self.width_slices) * len(self.height_slices)
-        )
+            max_value=len(self.width_slices) * len(self.height_slices))
         counter_2 = 0
         sector_num = 0
-
         for y in self.height_slices:
             counter_1 = counter_2
             counter_2 += 1
             for x in self.width_slices:
-                sub_img = self.image[y:y + self.cut_size, x:x + self.cut_size]
+                sector = Sector(
+                    image=self.image[y:y + self.cut_size, x:x + self.cut_size],
+                    x_pos=x,
+                    y_pos=y
+                )
                 if self.style == Style.square:
-                    self.square_vectorize_sector(sub_img, x, y)
-                if self.style == Style.circle:
-                    self.circle_vectorize_sector(sub_img, x, y)
-                if (self.style == Style.tri_left) or \
+                    self.square_vectorize_sector(sector)
+                elif self.style == Style.circle:
+                    self.circle_vectorize_sector(sector)
+                elif (self.style == Style.tri_right) or \
                         (self.style == Style.tri_alternating and counter_1 % 2):
-                    self.tri_left_vectorize_sector(sub_img, x, y)
-                else:
-                    sub_img = numpy.rot90(sub_img, axes=(0, 1))
-                    self.tri_right_vectorize_sector(sub_img, x, y)
-
+                    self.tri_right_vectorize_sector(sector)
+                elif (self.style == Style.tri_left) or \
+                        (self.style == Style.tri_alternating and counter_1 % 2 == 0):
+                    self.tri_left_vectorize_sector(sector)
                 sector_num += 1
                 counter_1 += 1
                 bar.update(sector_num)
 
-        self.drawing.save()
-
-    def tri_left_vectorize_sector(self, sub_img: ndarray,
-                                  x: int, y: int):
-        """Add two triangles to ``dwg`` whose colors are derived from the color
-        averages from the top and bottom diagonals of the 3D BGR image array of
-        the sub image"""
-        b, g, r = upper_tri_sum(sub_img)
+    def tri_left_vectorize_sector(self, sector: Sector):
+        x, y = sector.position
+        b, g, r = upper_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
                 [(x, y), (x + self.cut_size, y), (x + self.cut_size, y + self.cut_size)],
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
-        b, g, r = lower_tri_sum(sub_img)
+        b, g, r = lower_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
                 [(x, y), (x, y + self.cut_size), (x + self.cut_size, y + self.cut_size)],
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
 
-    def tri_right_vectorize_sector(self, sub_img: ndarray,
-                                   x: int, y: int):
-        """Add two triangles to ``dwg`` whose colors are derived from the color
-        averages from the top and bottom diagonals of the 3D BGR image array of
-        the sub image"""
-
-        b, g, r = upper_tri_sum(sub_img)
+    def tri_right_vectorize_sector(self, sector: Sector):
+        x, y = sector.position
+        b, g, r = upper_tri_sum(numpy.rot90(sector.image, axes=(0, 1)))
         self.drawing.add(
             self.drawing.polygon(
                 [(x, y + self.cut_size), (x + self.cut_size, y + self.cut_size),
                  (x + self.cut_size, y)],
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
-
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
-        b, g, r = lower_tri_sum(sub_img)
+        b, g, r = lower_tri_sum(sector.image)
         self.drawing.add(
             self.drawing.polygon(
                 [(x, y + self.cut_size), (x, y), (x + self.cut_size, y)],
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
-
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
 
-    def circle_vectorize_sector(self, sub_image: ndarray,
-                                x: int, y: int):
-        b, g, r = numpy.average(sub_image, (0, 1))
+    def circle_vectorize_sector(self, sector: Sector):
+        b, g, r = numpy.average(sector.image, (0, 1))
+        x, y = sector.position
         self.drawing.add(
             Circle(
                 center=(x + (self.cut_size / 2), y + (self.cut_size / 2)),
                 r=self.cut_size / 1.3,
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
 
-    def square_vectorize_sector(self, sub_image: ndarray, x: int, y: int):
-        b, g, r = numpy.average(sub_image, (0, 1))
+    def square_vectorize_sector(self, sector: Sector):
+        b, g, r = numpy.average(sector.image, (0, 1))
+        x, y = sector.position
         self.drawing.add(
             Rect(
                 insert=(x, y),
                 size=(self.cut_size, self.cut_size),
-                stroke=svgwrite.rgb(r, g, b, "RGB"),
+                stroke=self.stroke_color or svgwrite.rgb(r, g, b, "RGB"),
                 stroke_width=self.stroke_width,
                 fill=svgwrite.rgb(r, g, b, "RGB")
             )
         )
 
+    def save(self, output_path: str = None, **kwargs):
+        """Save the vectorized image
 
-v = Vectorizer("shooter.jpg", 15)
-v.vectorize()
+        :param output_path: save the image at the path specified.
+
+        .. note::
+            If no ``output_path`` is given :obj:Vectorizer.output_path`
+            will be used by default.
+        """
+        if output_path is None:
+            output_path = self.output_path
+        fileobj = io.open(output_path, mode='w', encoding='utf-8')
+        self.drawing.write(fileobj, **kwargs)
+        fileobj.close()
+
