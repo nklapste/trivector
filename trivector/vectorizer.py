@@ -110,14 +110,18 @@ class Vectorizer:
             Avoid making ``cut_size`` be small (eg: 2) for very large images.
             As run times can quickly increase.
 
-        :param image_path: path to the image to read
-        :param cut_size: size in pixels for each sector
-        :param output_path: path to output the vector image. Can be overridden
-            by the usage  of the ``output_path`` parameter in
+        :param image_path: path to the image to vectorize
+        :param cut_size: size in pixels for each vectorized sector
+        :param output_path: path to output the vectorized image. Can be
+            overridden later by using the ``output_path`` parameter in
             :meth:`Vectorizer.save`.
-        :param style: styling option for composing vectorized sectors
-        :param stroke_width:
-        :param stroke_color:
+        :param style: styling option for composing the vectorized sectors
+        :param stroke_width: width of the border stroke for each vectorized
+            sector
+        :param stroke_color: :obj:`tuple` representing the R,G,B color for
+            the border stroke for each vectorized sector. If unset the border
+            stroke color will be the same color as the vectorized
+            sector's color.
         """
         self.image = cv2.imread(image_path)  # pylint: disable=no-member
         self.output_path = output_path

@@ -41,10 +41,13 @@ def get_parser() -> argparse.ArgumentParser:
                             "sectors (default: %(default)s)")
     group.add_argument("--stroke-color", dest="stroke_color",
                        default=None, type=rgb,
-                       help="(default: %(default)s)")
+                       help="Tuple representing the R,G,B color for "
+                            "the border stroke for each vectorized sector "
+                            "(default: %(default)s)")
     group.add_argument("-stroke-width", dest="stroke_width",
                        type=float, default=0.0,
-                       help="(default: %(default)s)")
+                       help="Width of the border stroke for each vectorized "
+                            "sector (default: %(default)s)")
     return parser
 
 
