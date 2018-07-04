@@ -11,7 +11,5 @@ Module:
  + :mod:`.trivector` - convert an image into a vector composed of triangles
 """
 
-from trivector.trivector import trivector
-
 
 __version__ = (0, 0, 0)
