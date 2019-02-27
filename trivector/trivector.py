@@ -113,7 +113,8 @@ def vectorize_sector_right(sub_img: ndarray, dwg: Drawing,
 
 
 class DiagonalStyle(Enum):
-    """Styling noting on how to arrange the triangle sectors diagonals"""
+    """Styling options noting the diagonal arrangement of the
+    triangle sectors"""
     right = "right"
     left = "left"
     alternating = "alternating"
