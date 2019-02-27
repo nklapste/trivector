@@ -7,7 +7,6 @@ from enum import Enum
 
 import numpy as np
 import svgwrite
-from svgwrite import Drawing
 
 import cv2
 import progressbar
@@ -64,7 +63,7 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
     return np.sum(tri, axis=0) // len(tri)
 
 
-def vectorize_sector_left(sub_img: np.ndarray, dwg: Drawing,
+def vectorize_sector_left(sub_img: np.ndarray, dwg: svgwrite.Drawing,
                           x: int, y: int, cut_size: int):
     """Add two triangles to ``dwg`` whose colors are derived from the color
     averages from the top and bottom diagonals of the 3D BGR image array of
@@ -87,7 +86,7 @@ def vectorize_sector_left(sub_img: np.ndarray, dwg: Drawing,
     )
 
 
-def vectorize_sector_right(sub_img: np.ndarray, dwg: Drawing,
+def vectorize_sector_right(sub_img: np.ndarray, dwg: svgwrite.Drawing,
                            x: int, y: int, cut_size: int):
     """Add two triangles to ``dwg`` whose colors are derived from the color
     averages from the top and bottom diagonals of the 3D BGR image array of
