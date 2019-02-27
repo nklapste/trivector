@@ -5,8 +5,7 @@
 
 from enum import Enum
 
-import numpy
-from numpy import ndarray
+import numpy as np
 import svgwrite
 from svgwrite import Drawing
 
@@ -14,7 +13,7 @@ import cv2
 import progressbar
 
 
-def upper_tri_sum(d3array: ndarray) -> ndarray:
+def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
     """Get a 3D image array's upper diagonal's pixel color average
 
     :param d3array: 3D image array derived from :func:`cv2.imread`
@@ -32,10 +31,10 @@ def upper_tri_sum(d3array: ndarray) -> ndarray:
             break
         for j in range(y - i):
             tri.append(d3array[i][i + j])
-    return numpy.sum(tri, axis=0) // len(tri)
+    return np.sum(tri, axis=0) // len(tri)
 
 
-def lower_tri_sum(d3array: ndarray) -> ndarray:
+def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
     """Get a 3D image array's lower diagonal's pixel color average
 
     :param d3array: 3D image array derived from :func:`cv2.imread`
@@ -62,10 +61,10 @@ def lower_tri_sum(d3array: ndarray) -> ndarray:
     # if bottom tri is use the upper tri's sum
     if not tri:
         return upper_tri_sum(d3array)
-    return numpy.sum(tri, axis=0) // len(tri)
+    return np.sum(tri, axis=0) // len(tri)
 
 
-def vectorize_sector_left(sub_img: ndarray, dwg: Drawing,
+def vectorize_sector_left(sub_img: np.ndarray, dwg: Drawing,
                           x: int, y: int, cut_size: int):
     """Add two triangles to ``dwg`` whose colors are derived from the color
     averages from the top and bottom diagonals of the 3D BGR image array of
@@ -88,7 +87,7 @@ def vectorize_sector_left(sub_img: ndarray, dwg: Drawing,
     )
 
 
-def vectorize_sector_right(sub_img: ndarray, dwg: Drawing,
+def vectorize_sector_right(sub_img: np.ndarray, dwg: Drawing,
                            x: int, y: int, cut_size: int):
     """Add two triangles to ``dwg`` whose colors are derived from the color
     averages from the top and bottom diagonals of the 3D BGR image array of
@@ -157,7 +156,7 @@ def trivector(image_path: str, cut_size: int, output_path: str,
                     (diagonal_style == DiagonalStyle.alternating and counter_1 % 2):
                 vectorize_sector_left(sub_img, svg_drawing, x, y, cut_size)
             else:
-                sub_img = numpy.rot90(sub_img, axes=(0, 1))
+                sub_img = np.rot90(sub_img, axes=(0, 1))
                 vectorize_sector_right(sub_img, svg_drawing, x, y, cut_size)
             sector_num += 1
             counter_1 += 1
