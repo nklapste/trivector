@@ -57,7 +57,7 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
         for j in range(i):
             tri.append(d3array[i][j])
 
-    # if bottom tri is use the upper tri's sum
+    # if bottom tri is empty use the upper tri's sum
     if not tri:
         return upper_tri_sum(d3array)
     return np.sum(tri, axis=0) // len(tri)
