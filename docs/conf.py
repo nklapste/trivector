@@ -129,12 +129,12 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', (None, 'python-inv.txt')),
-    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'numpy': ('http://docs.scipy.org/docs/numpy/', None),
     'cv2': ('http://docs.opencv.org/2.4/', None),
 }
 
 
-# -- auto api doc generation --
+# -- auto api docs generation --
 def run_apidoc(_):
     from sphinx.ext.apidoc import main
     import os
