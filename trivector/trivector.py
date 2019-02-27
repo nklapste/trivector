@@ -63,22 +63,22 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
     return np.sum(tri, axis=0) // len(tri)
 
 
-def vectorize_sector_left(sub_img: np.ndarray, dwg: svgwrite.Drawing,
+def vectorize_sector_left(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
                           x: int, y: int, cut_size: int):
-    """Add two triangles to ``dwg`` whose colors are derived from the color
-    averages from the top and bottom diagonals of the 3D BGR image array of
-    the sub image"""
+    """Add two triangles to ``svg_drawing`` whose colors are derived from
+    the color averages from the top and bottom diagonals of the 3D BGR image
+    array of the sub image"""
     b, g, r = upper_tri_sum(sub_img)
-    dwg.add(
-        dwg.polygon(
+    svg_drawing.add(
+        svg_drawing.polygon(
             [(x, y), (x + cut_size, y), (x + cut_size, y + cut_size)],
             stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
     b, g, r = lower_tri_sum(sub_img)
-    dwg.add(
-        dwg.polygon(
+    svg_drawing.add(
+        svg_drawing.polygon(
             [(x, y), (x, y + cut_size), (x + cut_size, y + cut_size)],
             stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
@@ -86,22 +86,22 @@ def vectorize_sector_left(sub_img: np.ndarray, dwg: svgwrite.Drawing,
     )
 
 
-def vectorize_sector_right(sub_img: np.ndarray, dwg: svgwrite.Drawing,
+def vectorize_sector_right(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
                            x: int, y: int, cut_size: int):
-    """Add two triangles to ``dwg`` whose colors are derived from the color
-    averages from the top and bottom diagonals of the 3D BGR image array of
-    the sub image"""
+    """Add two triangles to ``svg_drawing`` whose colors are derived from
+    the color averages from the top and bottom diagonals of the 3D BGR image
+    array of the sub image"""
     b, g, r = upper_tri_sum(sub_img)
-    dwg.add(
-        dwg.polygon(
+    svg_drawing.add(
+        svg_drawing.polygon(
             [(x, y + cut_size), (x + cut_size, y + cut_size), (x + cut_size, y)],
             stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
     b, g, r = lower_tri_sum(sub_img)
-    dwg.add(
-        dwg.polygon(
+    svg_drawing.add(
+        svg_drawing.polygon(
             [(x, y + cut_size), (x, y), (x + cut_size, y)],
             stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
