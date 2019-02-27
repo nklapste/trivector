@@ -75,7 +75,7 @@ setup(
         "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
         "Topic :: Multimedia :: Graphics :: Graphics Conversion",
     ],
-    packages=find_packages(exclude=["test"]),
+    packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=[
         "svgwrite>=1.1.12,<2.0.0",
