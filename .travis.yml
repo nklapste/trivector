@@ -32,6 +32,7 @@ jobs:
     - stage: deploy
       name: "docs"
       python: 3.6
-      script:
+      install:
         - pip install .["docs"]
+      script:
         - sphinx-build docs/ build/
