@@ -101,7 +101,6 @@ def vectorize_sector_right(sub_img: ndarray, dwg: Drawing,
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
-
     b, g, r = lower_tri_sum(sub_img)
     dwg.add(
         dwg.polygon(
