@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Convert an image into a ``.svg`` vector image composed of triangles"""
+"""Image conversion functionality for trivector"""
 
 from enum import Enum
 

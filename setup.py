@@ -60,7 +60,8 @@ def readme():
 setup(
     name="trivector",
     version=VERSION,
-    description="Convert an image into a ``.svg`` vector image composed of triangles",
+    description="Convert an image into a SVG vector image composed "
+                "of triangular sectors.",
     long_description=readme(),
     author="Nathan Klapstein",
     author_email="nklapste@ualberta.ca",

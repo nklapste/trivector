@@ -3,12 +3,12 @@
 
 """trivector
 
-Convert an image into a ``.svg`` vector image composed of triangles.
+Convert an image into a SVG vector image composed of triangular sectors.
 
 Scripts:
  + :mod:`.__main__` - argparse entry point
 Module:
- + :mod:`.trivector` - convert an image into a vector composed of triangles
+ + :mod:`.trivector` - Image conversion functionality for trivector
 """
 
 from trivector.trivector import trivector
