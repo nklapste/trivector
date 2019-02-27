@@ -17,12 +17,12 @@ import progressbar
 def upper_tri_sum(d3array: ndarray) -> ndarray:
     """Get a 3D image array's upper diagonal's pixel color average
 
-    :param d3array: a 3D image array derived from :func:`cv2.imread`
+    :param d3array: 3D image array derived from :func:`cv2.imread`
 
     Treat the 3D array as 2d array. Having the innermost array (pixel BGR
     values) be considered base values to be averaged.
 
-    :return: a BGR array of the average color of the upper diagonal of the
+    :return: BGR array of the average color of the upper diagonal of the
         3D image array
     """
     x, y, z = d3array.shape
@@ -38,7 +38,7 @@ def upper_tri_sum(d3array: ndarray) -> ndarray:
 def lower_tri_sum(d3array: ndarray) -> ndarray:
     """Get a 3D image array's lower diagonal's pixel color average
 
-    :param d3array: a 3D image array derived from :func:`cv2.imread`
+    :param d3array: 3D image array derived from :func:`cv2.imread`
 
     Treat the 3D array as 2d array. Having the innermost array (pixel BGR
     values) be considered base values to be averaged.
@@ -48,7 +48,7 @@ def lower_tri_sum(d3array: ndarray) -> ndarray:
         If the lower diagonal cannot be computed (eg: flat/malformed 3D array)
         use the 3D image array's upper diagonal's pixel color average instead.
 
-    :return: a BGR array of the average color of the lower diagonal of the
+    :return: BGR array of the average color of the lower diagonal of the
         3D image array
     """
     x, y, z = d3array.shape
@@ -124,16 +124,12 @@ class DiagonalStyle(Enum):
 
 def trivector(image_path: str, cut_size: int, output_path: str,
               diagonal_style: DiagonalStyle = DiagonalStyle.alternating):
-    """Convert an image into a vector image composed of triangles
+    """Convert an image into a SVG vector image composed of triangular sectors
 
-    Save the vector image as a ``.svg``.
-
-    :param image_path: path to the image to convert to a vector image
+    :param image_path: path to the image to trivector
     :param cut_size: size in pixels for each triangle sector
-        (smaller==more triangles)
-    :param diagonal_style: a :class:`DiagonalStyle` styling noting on how to
-        arrange the triangle sectors diagonals
-    :param output_path: path to write the output image to
+    :param diagonal_style: diagonal arrangement of the triangle sectors
+    :param output_path: path to write the trivectored image
     """
     image = cv2.imread(image_path)  # pylint:disable=no-member
     svg_drawing = svgwrite.Drawing(output_path, profile="full")
