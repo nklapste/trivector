@@ -25,7 +25,7 @@ def upper_tri_sum(d3array: ndarray) -> ndarray:
     :return: BGR array of the average color of the upper diagonal of the
         3D image array
     """
-    x, y, z = d3array.shape
+    x, y, _ = d3array.shape
     tri = []
     for i in range(x):
         if i > y:
@@ -51,7 +51,7 @@ def lower_tri_sum(d3array: ndarray) -> ndarray:
     :return: BGR array of the average color of the lower diagonal of the
         3D image array
     """
-    x, y, z = d3array.shape
+    x, y, _ = d3array.shape
     tri = []
     for i in range(x):
         if i > y:
@@ -134,7 +134,7 @@ def trivector(image_path: str, cut_size: int, output_path: str,
     image = cv2.imread(image_path)  # pylint:disable=no-member
     svg_drawing = svgwrite.Drawing(output_path, profile="full")
 
-    height, width, channels = image.shape
+    height, width, _ = image.shape
 
     width_slices = range(0, width, cut_size)
     height_slices = range(0, height, cut_size)
