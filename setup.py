@@ -86,6 +86,7 @@ setup(
         "pytest>=2.8.7,<4.0.0",
         "pytest-cov<=2.6.0",
         "pylint>=1.9.1,<2.0.0",
+        "svglib>=0.9.0,<1.0.0"
     ],
     extras_require={
         "docs": [
