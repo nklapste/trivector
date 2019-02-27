@@ -9,7 +9,7 @@
 
 # -- Project information -----------------------------------------------------
 
-copyright = '2018, Nathan Klapstein'
+copyright = '2019, Nathan Klapstein'
 author = 'Nathan Klapstein'
 project = "trivector"
 version = "0.0"
@@ -120,7 +120,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'trivector', 'trivector Documentation',
-     author, 'trivector', "Convert an image into a ``.svg`` vector image composed of triangles",
+     author, 'trivector', "Convert an image into a SVG vector image composed of triangular sectors.",
      'Miscellaneous'),
 ]
 
