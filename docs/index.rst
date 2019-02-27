@@ -12,7 +12,6 @@ This code is open source, and is `available on GitHub`_.
    :caption: Contents:
 
    Overview<readme>
-   Modules<api/modules>
    Command Line Usage<commands>
 
 
