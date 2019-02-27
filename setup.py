@@ -82,11 +82,11 @@ setup(
         "numpy>=1.14.3,<2.0.0",
         "progressbar2>=3.37.1,<4.0.0",
     ],
-    tests_requires=[
+    tests_require=[
         "pytest>=2.8.7,<4.0.0",
         "pytest-cov<=2.6.0",
         "pylint>=1.9.1,<2.0.0",
-        "svglib>=0.9.0,<1.0.0"
+        "svglib>=0.9.0,<1.0.0",
     ],
     extras_require={
         "docs": [
