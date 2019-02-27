@@ -16,6 +16,7 @@ stages:
   - lint
   - test
   - build
+  - deploy
 
 jobs:
   include:
@@ -28,3 +29,9 @@ jobs:
       python: 3.6
       script:
         - python setup.py sdist
+    - stage: deploy
+      name: "docs"
+      python: 3.6
+      script:
+        - pip install .["docs"]
+        - sphinx-build docs/ build/
