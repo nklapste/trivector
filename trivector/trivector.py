@@ -4,12 +4,24 @@
 """Image conversion functionality for trivector"""
 
 from enum import Enum
+from typing import List
 
 import numpy as np
 import svgwrite
 
 import cv2
 import progressbar
+
+
+def bgr_value_average(bgr_values: List[np.ndarray]) -> np.ndarray:
+    """Compute the average BGR value from an list of BGR arrays
+
+    :param bgr_values: list of BGR arrays
+
+    :return: a single BGR array noting the average BGR values contained within
+        ``bgr_array``
+    """
+    return np.sum(bgr_values, axis=0) // len(bgr_values)
 
 
 def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
@@ -24,13 +36,13 @@ def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
         3D image array
     """
     x, y, _ = d3array.shape
-    tri = []
+    tri_elem = []
     for i in range(x):
         if i > y:
             break
         for j in range(y - i):
-            tri.append(d3array[i][i + j])
-    return np.sum(tri, axis=0) // len(tri)
+            tri_elem.append(d3array[i][i + j])
+    return bgr_value_average(tri_elem)
 
 
 def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
@@ -50,17 +62,17 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
         3D image array
     """
     x, y, _ = d3array.shape
-    tri = []
+    tri_elem = []
     for i in range(x):
         if i > y:
             break
         for j in range(i):
-            tri.append(d3array[i][j])
+            tri_elem.append(d3array[i][j])
 
     # if bottom tri is empty use the upper tri's sum
-    if not tri:
+    if not tri_elem:
         return upper_tri_sum(d3array)
-    return np.sum(tri, axis=0) // len(tri)
+    return bgr_value_average(tri_elem)
 
 
 def vectorize_sector_left(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
