@@ -13,6 +13,33 @@ import cv2
 from svgwrite.shapes import Rect, Circle
 
 
+class Vectorizer:
+    def __init__(self, image_path: str, sector_size: int, **kwargs):
+        self.image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)  # pylint: disable=no-member
+        self.sector_size = sector_size
+
+        height, width, _ = self.image.shape
+        self.width_slices = list(range(0, width, self.sector_size))
+        self.height_slices = list(range(0, height, self.sector_size))
+        self.svg_drawing = svgwrite.Drawing(
+            profile="full",
+            size=(len(self.width_slices)*self.sector_size,
+                  len(self.height_slices)*self.sector_size)
+        )
+
+    def vectorize(self) -> svgwrite.Drawing:
+        pass
+
+    def get_sector(self, x: int, y: int) -> np.ndarray:
+        return self.image[y:y + self.sector_size, x:x + self.sector_size]
+
+    @property
+    def sectors(self) -> Generator[Tuple[int, int, np.ndarray], None, None]:
+        for y in self.height_slices:
+            for x in self.width_slices:
+                yield x, y, self.get_sector(x, y)
+
+
 def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
     """Get a 3D image array's upper diagonal's pixel color average
 
@@ -119,33 +146,6 @@ class DiagonalStyle(Enum):
 
     def __str__(self):
         return self.value
-
-
-class Vectorizer:
-    def __init__(self, image_path: str, sector_size: int, **kwargs):
-        self.image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)  # pylint: disable=no-member
-        self.sector_size = sector_size
-
-        height, width, _ = self.image.shape
-        self.width_slices = list(range(0, width, self.sector_size))
-        self.height_slices = list(range(0, height, self.sector_size))
-        self.svg_drawing = svgwrite.Drawing(
-            profile="full",
-            size=(len(self.width_slices)*self.sector_size,
-                  len(self.height_slices)*self.sector_size)
-        )
-
-    def vectorize(self) -> svgwrite.Drawing:
-        pass
-
-    def get_sector(self, x: int, y: int) -> np.ndarray:
-        return self.image[y:y + self.sector_size, x:x + self.sector_size]
-
-    @property
-    def sectors(self) -> Generator[Tuple[int, int, np.ndarray], None, None]:
-        for y in self.height_slices:
-            for x in self.width_slices:
-                yield x, y, self.get_sector(x, y)
 
 
 class TriVectorizer(Vectorizer):
