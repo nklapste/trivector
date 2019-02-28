@@ -33,3 +33,17 @@ To get help on using trivector type the following command:
 .. code-block:: shell
 
     trivector --help
+
+Example
+-------
+
+Below is a simple PNG raster image to trivectorize!
+
+.. image:: ../examples/meface_before.png
+    :width: 250
+
+Running ``trivector meface_before.png meface_after.svg 20`` yields the
+following trivectorized SVG image at ``meface_after.svg``:
+
+.. image:: ../examples/meface_after.svg
+    :width: 250
