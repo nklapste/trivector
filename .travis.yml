@@ -1,67 +1,60 @@
 language: python
-
 python: 3.6
-
 before_install:
-  - pip install codecov
-
+- pip install codecov
 install:
-  - pip install .
-
+- pip install .
 script:
-  - python setup.py test
-
+- python setup.py test
 after_success:
-  - codecov
-
+- codecov
 stages:
-  - lint
-  - test
-  - build
-  - doc
-  - test_deploy
-  - deploy
-
+- lint
+- test
+- build
+- doc
+- test_deploy
+- deploy
 jobs:
   include:
-    - stage: lint
-      python: 3.6
-      script:
-        - python setup.py lint || exit $(($? & 35))
-    - stage: test
-    - python: 3.5
-    - python: 3.7
-      dist: xenial
-    - stage: build
-      python: 3.6
-      install:
-        - pip install . wheel
-      script:
-        - python setup.py sdist bdist_wheel
-    - stage: doc
-      python: 3.6
-      install:
-        - pip install .["docs"]
-      script:
-        - sphinx-build docs/ build/
-    - stage: test_deploy
-      python: 3.6
-      deploy:
-        provider: pypi
-        user: nklapste
-        password:
-          secure: UP8MNQxZTpJ/5rsRnpsMLpKuH5dWKypBoNDUvMjKxkCFkVyVmmmudqp0lcE6tNOetrEnDk5N6PIT2j2cTWapZ4gAp56U+m4wrwHBDTp/mUSnPJCtKIVG1qv+0vdUGHpvyHTY1CfP+2dyG6gCoQm9syKOGMD1A3KIgWXNVX9z/KOJwY6UzfzmfgRizjao0yAV2wqYywsJsU8ykS9bt465lD0W27m33SoaAkUnPy2jH56N1Nm7mG7IwB+Mok+6+kSwMnmtAPuABR5F8jGVnY0qhy416x2CXWpkmXpywWWGoAAiu8ala7DOq2z4W8rJNC+AmhygDj3/oGLr8bQckumHvWyWd8GE3IH2F3mi5iYrBGjy/9Puygt+iJqsX2yi5Bv0OxIUMRYLhx4mjS3xt91X+BnmhtORv5JYkcxOeSqy7bIYGgwNx4eYMr0xwZsQ3db6S62CUbrPnse97Sa7WHJL8Z5h1g8TLfPO+jo87zkhTJDwyCq7clkhbnWwJ/dT26I7WpUvpbp7vGOzo6Ee+QtxTHsRTo7st8ShY1URYVQKIL4yG7vfDyPFjPJZpX2PpfrkoWanzvYRIWQpZ0zwC8yCcxIPYgMZdSFhjpuCwdF5qb3H4MyVUb1TuCuzB3Mj1UpqPAa4Axp7b/fUtvEXaLFg3i9SSZQYhH4b6B4kIU8Y/Kw=
-        server: https://test.pypi.org/legacy/
-        distributions: "sdist bdist_wheel"
-    - stage: deploy
-      python: 3.6
-      deploy:
-        provider: pypi
-        user: nklapste
-        password:
-          secure: UP8MNQxZTpJ/5rsRnpsMLpKuH5dWKypBoNDUvMjKxkCFkVyVmmmudqp0lcE6tNOetrEnDk5N6PIT2j2cTWapZ4gAp56U+m4wrwHBDTp/mUSnPJCtKIVG1qv+0vdUGHpvyHTY1CfP+2dyG6gCoQm9syKOGMD1A3KIgWXNVX9z/KOJwY6UzfzmfgRizjao0yAV2wqYywsJsU8ykS9bt465lD0W27m33SoaAkUnPy2jH56N1Nm7mG7IwB+Mok+6+kSwMnmtAPuABR5F8jGVnY0qhy416x2CXWpkmXpywWWGoAAiu8ala7DOq2z4W8rJNC+AmhygDj3/oGLr8bQckumHvWyWd8GE3IH2F3mi5iYrBGjy/9Puygt+iJqsX2yi5Bv0OxIUMRYLhx4mjS3xt91X+BnmhtORv5JYkcxOeSqy7bIYGgwNx4eYMr0xwZsQ3db6S62CUbrPnse97Sa7WHJL8Z5h1g8TLfPO+jo87zkhTJDwyCq7clkhbnWwJ/dT26I7WpUvpbp7vGOzo6Ee+QtxTHsRTo7st8ShY1URYVQKIL4yG7vfDyPFjPJZpX2PpfrkoWanzvYRIWQpZ0zwC8yCcxIPYgMZdSFhjpuCwdF5qb3H4MyVUb1TuCuzB3Mj1UpqPAa4Axp7b/fUtvEXaLFg3i9SSZQYhH4b6B4kIU8Y/Kw=
-        on:
-          tags: true
-          branch: master
-          repo: nklapste/trivector
-        distributions: "sdist bdist_wheel"
+  - stage: lint
+    python: 3.6
+    script:
+    - python setup.py lint || exit $(($? & 35))
+  - stage: test
+  - python: 3.5
+  - python: 3.7
+    dist: xenial
+  - stage: build
+    python: 3.6
+    install:
+    - pip install . wheel
+    script:
+    - python setup.py sdist bdist_wheel
+  - stage: doc
+    python: 3.6
+    install:
+    - pip install .["docs"]
+    script:
+    - sphinx-build docs/ build/
+  - stage: test_deploy
+    python: 3.6
+    deploy:
+      provider: pypi
+      user: nklapste
+      password:
+        secure: ca6bgfa0lVPPFGkvCPRTxL5F1y71EGz0Qv6M917JFiLHZL+YKYzkq6A0j9OUugWGLPL2UNm8hB3xF+vkR3YbR1dL4tP59UyufFrFcBV9ceHWm3kflKOHdfzt+F2DbZ0hqiZltlfbalPLFlVMbfW2fA4xpeWKS8G1kb+Zf0kvF/+R9qM8KMIloPxYC9D3rGJAZmrEBC0Q9kW6UzcUF3u1BtoyA3SAjfs7sitAz9wUMiKAEUouA6z4tTkWSxkfaEkC7MgSIrOquM0TIgdRiOqI1iyqatweaqqChh9QTArL9Lu8RqSjiQcwJOWTgNfZTRTi6F+oOlCOg6aDWIwA9YNmXogdoe8hxxoNnwif5QrgAfFSJU1VuOGtcTRbCf2ecpJhs27YsS4dLhrIbigIt02S18J2RHalqq93rDVjCvTAA46Ls+elxDqTbKlGpQUAR7EA15nuWIQBFHLyHbDFl8tHAJs+a2H+FgCYreVBA5dfkXj8zDGiYDKvAooLjgcO3ysO3BfRNeHILU2kKspAyAvOqFCYwP0P67ycf4TS4A1Ff8SkGQX3uyn7ePeHKrOFr7ayZMipyU3T30R3gm5ToLGtXkmJPNEeM7yuLHddFapdB+gTN1vRWGuY3N1Bz/IHfCkxjJJJUxdkChDI9gFkXfJlws8kgLCSRp/an2Ec2ihFJ5o=
+      server: https://test.pypi.org/legacy/
+      distributions: sdist bdist_wheel
+  - stage: deploy
+    python: 3.6
+    deploy:
+      provider: pypi
+      user: nklapste
+      password:
+        secure: ca6bgfa0lVPPFGkvCPRTxL5F1y71EGz0Qv6M917JFiLHZL+YKYzkq6A0j9OUugWGLPL2UNm8hB3xF+vkR3YbR1dL4tP59UyufFrFcBV9ceHWm3kflKOHdfzt+F2DbZ0hqiZltlfbalPLFlVMbfW2fA4xpeWKS8G1kb+Zf0kvF/+R9qM8KMIloPxYC9D3rGJAZmrEBC0Q9kW6UzcUF3u1BtoyA3SAjfs7sitAz9wUMiKAEUouA6z4tTkWSxkfaEkC7MgSIrOquM0TIgdRiOqI1iyqatweaqqChh9QTArL9Lu8RqSjiQcwJOWTgNfZTRTi6F+oOlCOg6aDWIwA9YNmXogdoe8hxxoNnwif5QrgAfFSJU1VuOGtcTRbCf2ecpJhs27YsS4dLhrIbigIt02S18J2RHalqq93rDVjCvTAA46Ls+elxDqTbKlGpQUAR7EA15nuWIQBFHLyHbDFl8tHAJs+a2H+FgCYreVBA5dfkXj8zDGiYDKvAooLjgcO3ysO3BfRNeHILU2kKspAyAvOqFCYwP0P67ycf4TS4A1Ff8SkGQX3uyn7ePeHKrOFr7ayZMipyU3T30R3gm5ToLGtXkmJPNEeM7yuLHddFapdB+gTN1vRWGuY3N1Bz/IHfCkxjJJJUxdkChDI9gFkXfJlws8kgLCSRp/an2Ec2ihFJ5o=
+      on:
+        tags: true
+        branch: master
+        repo: nklapste/trivector
+      distributions: sdist bdist_wheel
