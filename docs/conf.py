@@ -9,11 +9,25 @@
 
 # -- Project information -----------------------------------------------------
 
-copyright = '2018, Nathan Klapstein'
+copyright = '2019, Nathan Klapstein'
 author = 'Nathan Klapstein'
 project = "trivector"
-version = "0.0"
-release = "0.0.0"
+
+
+def find_version(*file_paths):
+    import codecs
+    import os
+    import re
+
+    with codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *file_paths), 'r') as fp:
+        version_file = fp.read()
+    m = re.search(r"^__version__ = \((\d+), ?(\d+), ?(\d+)\)", version_file, re.M)
+    if m:
+        return "{}.{}".format(*m.groups()), "{}.{}.{}".format(*m.groups())
+    raise RuntimeError("Unable to find a valid version")
+
+
+version, release = find_version("..", "trivector", "__init__.py")
 
 # -- General configuration ---------------------------------------------------
 
@@ -119,9 +133,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'trivector', 'trivector Documentation',
-     author, 'trivector', "Convert an image into a ``.svg`` vector image composed of triangles",
-     'Miscellaneous'),
+    (master_doc, 'trivector', 'trivector Documentation', author, 'trivector',
+     'Convert an image into a SVG vector image composed of triangular '
+     'sectors.', 'Miscellaneous'),
 ]
 
 
@@ -129,12 +143,12 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', (None, 'python-inv.txt')),
-    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
     'cv2': ('http://docs.opencv.org/2.4/', None),
 }
 
 
-# -- auto api doc generation --
+# -- auto api docs generation --
 def run_apidoc(_):
     from sphinx.ext.apidoc import main
     import os
@@ -142,7 +156,8 @@ def run_apidoc(_):
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     module = os.path.join(cur_dir, "..", "trivector")
-    main(["--module-first", "--separate", "--implicit-namespaces", module, "--output-dir", "api"])
+    main(["--module-first", "--separate", "--implicit-namespaces", module,
+          "--output-dir", os.path.join(cur_dir, "api")])
 
 
 def setup(app):
