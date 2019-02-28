@@ -18,7 +18,7 @@ Convert an image into a SVG vector image composed of triangular sectors.
 Installation
 ============
 
-You can install trivector from pypi with the following command:
+You can install trivector from PyPI with the following command:
 
 .. code-block:: shell
 
