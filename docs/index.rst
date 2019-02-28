@@ -1,7 +1,4 @@
-.. trivector documentation master file, created by
-   sphinx-quickstart on Fri Jun  1 18:59:40 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. trivector documentation master file
 
 Welcome to trivector's documentation!
 =====================================
@@ -15,7 +12,6 @@ This code is open source, and is `available on GitHub`_.
    :caption: Contents:
 
    Overview<readme>
-   Modules<api/modules>
    Command Line Usage<commands>
 
 
