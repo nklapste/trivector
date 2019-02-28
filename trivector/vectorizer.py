@@ -123,7 +123,7 @@ class DiagonalStyle(Enum):
 
 class Vectorizer:
     def __init__(self, image_path: str, sector_size: int, **kwargs):
-        self.image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_RGB2RGB)  # pylint: disable=no-member
+        self.image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)  # pylint: disable=no-member
         self.sector_size = sector_size
 
         height, width, _ = self.image.shape
