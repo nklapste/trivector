@@ -10,7 +10,6 @@ import numpy as np
 import svgwrite
 
 import cv2
-import progressbar
 from svgwrite.shapes import Rect, Circle
 
 
@@ -131,7 +130,6 @@ class DiagonalStyle(Enum):
 
 
 class Vectorizer:
-
     def __init__(self, image_path: str, sector_size: int, **kwargs):
         self.image = cv2.imread(image_path)  # pylint: disable=no-member
         self.sector_size = sector_size
