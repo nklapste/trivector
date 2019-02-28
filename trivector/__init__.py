@@ -11,7 +11,4 @@ Module:
  + :mod:`.trivector` - Image conversion functionality for trivector
 """
 
-from trivector.trivector import trivector
-
-
 __version__ = (1, 1, 1)

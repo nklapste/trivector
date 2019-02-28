@@ -4,7 +4,7 @@
 """Image conversion functionality for trivector"""
 
 from enum import Enum
-from typing import List
+from typing import List, Generator, Tuple
 
 import numpy as np
 import svgwrite
@@ -122,51 +122,63 @@ class DiagonalStyle(Enum):
     triangle sectors"""
     right = "right"
     left = "left"
-    alternating = "alternating"
+    left_alternating = "left_alternating"
+    right_alternating = "right_alternating"
 
     def __str__(self):
         return self.value
 
 
-def trivector(image_path: str, cut_size: int, output_path: str,
-              diagonal_style: DiagonalStyle = DiagonalStyle.alternating):
-    """Convert an image into a SVG vector image composed of triangular sectors
+class Vectorizer:
 
-    :param image_path: path to the image to trivector
-    :param cut_size: size in pixels for each triangle sector
-    :param diagonal_style: diagonal arrangement of the triangle sectors
-    :param output_path: path to write the trivectored image
-    """
-    image = cv2.imread(image_path)  # pylint:disable=no-member
+    def __init__(self, image_path: str, sector_size: int, **kwargs):
+        self.image = cv2.imread(image_path)  # pylint: disable=no-member
+        self.sector_size = sector_size
 
-    height, width, _ = image.shape
+        height, width, _ = self.image.shape
+        self.width_slices = list(range(0, width, self.sector_size))
+        self.height_slices = list(range(0, height, self.sector_size))
+        self.svg_drawing = svgwrite.Drawing(
+            profile="full",
+            size=(len(self.width_slices)*self.sector_size,
+                  len(self.height_slices)*self.sector_size)
+        )
 
-    width_slices = range(0, width, cut_size)
-    height_slices = range(0, height, cut_size)
-    svg_drawing = svgwrite.Drawing(
-        output_path,
-        profile="full",
-        size=(len(width_slices)*cut_size, len(height_slices)*cut_size)
-    )
+    def vectorize(self) -> svgwrite.Drawing:
+        pass
 
-    # start up the progress bar
-    # each image sector is one tick one the progress bar
-    bar = progressbar.ProgressBar(max_value=len(width_slices)*len(height_slices))
-    counter_2 = 0
-    sector_num = 0
-    for y in height_slices:
-        counter_1 = counter_2
-        counter_2 += 1
-        for x in width_slices:
-            sector_image = image[y:y + cut_size, x:x + cut_size]
-            if (diagonal_style == DiagonalStyle.left) or \
-                    (diagonal_style == DiagonalStyle.alternating and counter_1 % 2):
-                vectorize_sector_left(sector_image, svg_drawing, x, y, cut_size)
+    def get_sector(self, x: int, y: int) -> np.ndarray:
+        return self.image[y:y + self.sector_size, x:x + self.sector_size]
+
+    @property
+    def sectors(self) -> Generator[Tuple[int, int, np.ndarray], None, None]:
+        for y in self.height_slices:
+            for x in self.width_slices:
+                yield x, y, self.get_sector(x, y)
+
+
+class TriVectorizer(Vectorizer):
+
+    def __init__(self, diagonal_style: DiagonalStyle = DiagonalStyle.left_alternating, **kwargs):
+        self.diagonal_style = diagonal_style
+        super().__init__(**kwargs)
+
+    def vectorize(self) -> svgwrite.Drawing:
+        for x, y, sector_image in self.sectors:
+            x_idx = x//self.sector_size
+            y_idx = y//self.sector_size
+               # (self.diagonal_style == DiagonalStyle.left_alternating and (x/self.sector_size == 1 and not (y_idx) % 2) or (x/self.sector_size) % 2) or \ # wave
+            if (self.diagonal_style == DiagonalStyle.left) or \
+               (self.diagonal_style == DiagonalStyle.right_alternating and
+                    ((x_idx % 2 and not y_idx % 2) or
+                     (not x_idx % 2 and y_idx % 2))) or \
+               (self.diagonal_style == DiagonalStyle.left_alternating and
+                    not ((x_idx % 2 and not y_idx % 2) or
+                         (not x_idx % 2 and y_idx % 2))):
+                vectorize_sector_left(sector_image, self.svg_drawing, x, y,
+                                      self.sector_size)
             else:
                 sector_image = np.rot90(sector_image, axes=(0, 1))
-                vectorize_sector_right(sector_image, svg_drawing, x, y, cut_size)
-            sector_num += 1
-            counter_1 += 1
-            bar.update(sector_num)
-
-    svg_drawing.save()
+                vectorize_sector_right(sector_image, self.svg_drawing, x, y,
+                                       self.sector_size)
+        return self.svg_drawing

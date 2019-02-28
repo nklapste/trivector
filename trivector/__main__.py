@@ -6,7 +6,7 @@
 import argparse
 import sys
 
-from trivector.trivector import trivector, DiagonalStyle
+from trivector.trivector import TriVectorizer, DiagonalStyle
 
 
 def get_parser():
@@ -24,7 +24,7 @@ def get_parser():
                        help="size in pixels for each triangle sector")
     group.add_argument("-d", "--diagonal-style", dest="diagonal_style",
                        type=DiagonalStyle, choices=list(DiagonalStyle),
-                       default=DiagonalStyle.alternating.value,
+                       default=DiagonalStyle.left_alternating.value,
                        help="diagonal arrangement of the triangle sectors")
     return parser
 
@@ -34,13 +34,14 @@ def main(argv=sys.argv[1:]):
     parser = get_parser()
     args = parser.parse_args(argv)
 
-    trivector(
+    tri_vectorizer = TriVectorizer(
         image_path=args.image,
-        cut_size=args.sector_size,
-        output_path=args.output,
-        diagonal_style=args.diagonal_style
+        diagonal_style=args.diagonal_style,
+        sector_size=args.sector_size
     )
 
+    with open(args.output, "w") as f:
+        tri_vectorizer.vectorize().write(f)
     return 0
 
 
