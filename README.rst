@@ -39,11 +39,11 @@ Example
 
 Below is a simple PNG raster image to trivectorize!
 
-.. image:: ../examples/meface_before.png
+.. image:: https://raw.githubusercontent.com/nklapste/trivector/master/examples/meface_before.png
     :width: 250
 
 Running ``trivector meface_before.png meface_after.svg 20`` yields the
 following trivectorized SVG image at ``meface_after.svg``:
 
-.. image:: ../examples/meface_after.svg
+.. image:: https://raw.githubusercontent.com/nklapste/trivector/master/examples/meface_after.svg?sanitize=true
     :width: 250
