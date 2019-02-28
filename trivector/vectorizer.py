@@ -75,43 +75,46 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
     return bgr_value_average(tri_elem)
 
 
-def vectorize_sector_left(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
-                          x: int, y: int, cut_size: int):
+def vectorize_sector_left(sub_img: np.ndarray,
+                          svg_drawing: svgwrite.Drawing,
+                          x: int, y: int, sector_size: int):
     """Add two triangles to ``svg_drawing`` whose colors are derived from
     the color averages from the top and bottom diagonals of the 3D BGR image
     array of the sub image"""
     b, g, r = upper_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
-            [(x, y), (x + cut_size, y), (x + cut_size, y + cut_size)],
+            [(x, y), (x + sector_size, y), (x + sector_size, y + sector_size)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
     b, g, r = lower_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
-            [(x, y), (x, y + cut_size), (x + cut_size, y + cut_size)],
+            [(x, y), (x, y + sector_size), (x + sector_size, y + sector_size)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
 
 
-def vectorize_sector_right(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
-                           x: int, y: int, cut_size: int):
+def vectorize_sector_right(sub_img: np.ndarray,
+                           svg_drawing: svgwrite.Drawing,
+                           x: int, y: int, sector_size: int):
     """Add two triangles to ``svg_drawing`` whose colors are derived from
     the color averages from the top and bottom diagonals of the 3D BGR image
     array of the sub image"""
+    sub_img = np.rot90(sub_img, axes=(0, 1))
     b, g, r = upper_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
-            [(x, y + cut_size), (x + cut_size, y + cut_size), (x + cut_size, y)],
+            [(x, y + sector_size), (x + sector_size, y + sector_size), (x + sector_size, y)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
     b, g, r = lower_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
-            [(x, y + cut_size), (x, y), (x + cut_size, y)],
+            [(x, y + sector_size), (x, y), (x + sector_size, y)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
@@ -163,26 +166,30 @@ class TriVectorizer(Vectorizer):
 
     def vectorize(self) -> svgwrite.Drawing:
         for x, y, sector_image in self.sectors:
-            x_idx = x//self.sector_size
-            y_idx = y//self.sector_size
+            x_idx = x // self.sector_size
+            y_idx = y // self.sector_size
                # (self.diagonal_style == DiagonalStyle.left_alternating and (x/self.sector_size == 1 and not (y_idx) % 2) or (x/self.sector_size) % 2) or \ # wave
-            if (self.diagonal_style == DiagonalStyle.left) or \
-               (self.diagonal_style == DiagonalStyle.right_alternating and
+            if self.diagonal_style == DiagonalStyle.right:
+                vectorize_sector_right(sector_image, self.svg_drawing, x, y,
+                                       self.sector_size)
+            elif (self.diagonal_style == DiagonalStyle.left) or \
+                 (self.diagonal_style == DiagonalStyle.right_alternating and
                     ((x_idx % 2 and not y_idx % 2) or
                      (not x_idx % 2 and y_idx % 2))) or \
-               (self.diagonal_style == DiagonalStyle.left_alternating and
+                 (self.diagonal_style == DiagonalStyle.left_alternating and
                     not ((x_idx % 2 and not y_idx % 2) or
                          (not x_idx % 2 and y_idx % 2))):
                 vectorize_sector_left(sector_image, self.svg_drawing, x, y,
                                       self.sector_size)
             else:
-                sector_image = np.rot90(sector_image, axes=(0, 1))
                 vectorize_sector_right(sector_image, self.svg_drawing, x, y,
                                        self.sector_size)
         return self.svg_drawing
 
 
-def square_vectorize_sector(sector_image: np.ndarray, svg_drawing: svgwrite.Drawing, x: int, y: int, sector_size: int):
+def square_vectorize_sector(sector_image: np.ndarray,
+                            svg_drawing: svgwrite.Drawing,
+                            x: int, y: int, sector_size: int):
     b, g, r = np.average(sector_image, (0, 1))
     svg_drawing.add(
         Rect(
@@ -197,13 +204,16 @@ class SquareVectorizer(Vectorizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def vectorize(self):
+    def vectorize(self) -> svgwrite.Drawing:
         for x, y, sector_image in self.sectors:
-            square_vectorize_sector(sector_image, self.svg_drawing, x, y, self.sector_size)
+            square_vectorize_sector(
+                sector_image, self.svg_drawing, x, y, self.sector_size)
         return self.svg_drawing
 
 
-def circle_vectorize_sector(sector_image: np.ndarray, svg_drawing: svgwrite.Drawing, x: int, y: int, sector_size: int):
+def circle_vectorize_sector(sector_image: np.ndarray,
+                            svg_drawing: svgwrite.Drawing,
+                            x: int, y: int, sector_size: int):
     b, g, r = np.average(sector_image, (0, 1))
     svg_drawing.add(
         Circle(
@@ -218,7 +228,7 @@ class CircleVectorizer(Vectorizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def vectorize(self):
+    def vectorize(self) -> svgwrite.Drawing:
         for x, y, sector_image in self.sectors:
             circle_vectorize_sector(
                 sector_image, self.svg_drawing, x, y, self.sector_size)
