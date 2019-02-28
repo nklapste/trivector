@@ -1,5 +1,7 @@
 language: python
 
+python: 3.6
+
 before_install:
   - pip install codecov
 
@@ -16,23 +18,39 @@ stages:
   - lint
   - test
   - build
+  - doc
   - deploy
 
 jobs:
   include:
-    - python: 3.6
     - stage: lint
       python: 3.6
       script:
         - python setup.py lint || exit $(($? & 35))
+    - stage: test
+    - python: 3.5
+    - python: 3.7
+      dist: xenial
     - stage: build
       python: 3.6
+      install:
+        - pip install . wheel
       script:
-        - python setup.py sdist
-    - stage: deploy
-      name: "docs"
+        - python setup.py sdist bdist_wheel
+    - stage: doc
       python: 3.6
       install:
         - pip install .["docs"]
       script:
         - sphinx-build docs/ build/
+    - stage: deploy
+      python: 3.6
+      deploy:
+        provider: pypi
+        user: nklapste
+        password:
+          secure: NSoqctMUAvYFR/HziUJWZQeQKVGKqNJoW7yJiPlDhRsZSkKi5jLrWTB6l/2mpCXYwo5ZZkCQnKyOrdrOnS7v5e/jBIbRxeRQLETeSl+SnKB3DO6o4mW2kZsfsnmmPIuv+x77gh2kofFT3MYNKxjtwMFO2aqNIrc8JhYG+FCe2O+BvQG2A/iE5HTLF1/fSpsJNoxoMarmjQTs3KBifgLUKOt9OJFxG9mClZ4fsQrfGWcZt7jOelXGHENgekOdeNHkGPUcoshLV2psHb+2Yvf+xPIcvXsH9lnmczBnuclj626P7Mm0AWkWg2/2SRSlsyG8j1/qKQ2ynJddVL1U9NaVYcbBV4Ss1F34UEBTTCpMy6e5R4jP0BLsuK4PQatr2S0wU66pbq4fxyAhO1x+7JG4oJzXykHFzRUIvJeGanJoK8dGOYPLhf7Kijvzx2NhFbeqsg/yjlZDoxMjteVF8b4deVpEHQEnNNtbVl/MuDWn5v5x0wMxXpkwVbcf5u1IUKFNRInPCVFFvMT+F45+0DcEjvefumpQ7CTvwiyhnkLxmVIUih6zwyuXuuNihwcuWcVzoicEiiids3ufD70uK5AHuuz1MQSo0bS8vLvhq3xWPocpetHli5kOKSs6DQ5fDrrmEGIzSZ1HjE51BgMO5Z7yj5ljy546l7w2Xr/IscBQauM=
+        on:
+          tags: true
+          branch: master
+          repo: nklapste/trivector
