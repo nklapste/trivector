@@ -13,17 +13,6 @@ import cv2
 from svgwrite.shapes import Rect, Circle
 
 
-def bgr_value_average(bgr_values: List[np.ndarray]) -> np.ndarray:
-    """Compute the average BGR value from an list of BGR arrays
-
-    :param bgr_values: list of BGR arrays
-
-    :return: a single BGR array noting the average BGR values contained within
-        ``bgr_array``
-    """
-    return np.sum(bgr_values, axis=0) // len(bgr_values)
-
-
 def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
     """Get a 3D image array's upper diagonal's pixel color average
 
@@ -42,7 +31,7 @@ def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
             break
         for j in range(y - i):
             tri_elem.append(d3array[i][i + j])
-    return bgr_value_average(tri_elem)
+    return np.average(tri_elem, axis=0)
 
 
 def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
@@ -72,7 +61,7 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
     # if bottom tri is empty use the upper tri's sum
     if not tri_elem:
         return upper_tri_sum(d3array)
-    return bgr_value_average(tri_elem)
+    return np.average(tri_elem, axis=0)
 
 
 def vectorize_sector_left(sub_img: np.ndarray,
