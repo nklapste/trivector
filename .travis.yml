@@ -45,6 +45,8 @@ jobs:
       password:
         secure: ca6bgfa0lVPPFGkvCPRTxL5F1y71EGz0Qv6M917JFiLHZL+YKYzkq6A0j9OUugWGLPL2UNm8hB3xF+vkR3YbR1dL4tP59UyufFrFcBV9ceHWm3kflKOHdfzt+F2DbZ0hqiZltlfbalPLFlVMbfW2fA4xpeWKS8G1kb+Zf0kvF/+R9qM8KMIloPxYC9D3rGJAZmrEBC0Q9kW6UzcUF3u1BtoyA3SAjfs7sitAz9wUMiKAEUouA6z4tTkWSxkfaEkC7MgSIrOquM0TIgdRiOqI1iyqatweaqqChh9QTArL9Lu8RqSjiQcwJOWTgNfZTRTi6F+oOlCOg6aDWIwA9YNmXogdoe8hxxoNnwif5QrgAfFSJU1VuOGtcTRbCf2ecpJhs27YsS4dLhrIbigIt02S18J2RHalqq93rDVjCvTAA46Ls+elxDqTbKlGpQUAR7EA15nuWIQBFHLyHbDFl8tHAJs+a2H+FgCYreVBA5dfkXj8zDGiYDKvAooLjgcO3ysO3BfRNeHILU2kKspAyAvOqFCYwP0P67ycf4TS4A1Ff8SkGQX3uyn7ePeHKrOFr7ayZMipyU3T30R3gm5ToLGtXkmJPNEeM7yuLHddFapdB+gTN1vRWGuY3N1Bz/IHfCkxjJJJUxdkChDI9gFkXfJlws8kgLCSRp/an2Ec2ihFJ5o=
       server: https://test.pypi.org/legacy/
+      on:
+        all_branches: true
       distributions: sdist bdist_wheel
   - stage: deploy
     python: 3.6
