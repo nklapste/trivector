@@ -6,7 +6,7 @@
 import argparse
 import sys
 
-from trivector.trivector import TriVectorizer, DiagonalStyle
+from trivector.vectorizer import TriVectorizer, DiagonalStyle
 
 
 def get_parser():
