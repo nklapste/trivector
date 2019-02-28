@@ -9,30 +9,29 @@ script:
 after_success:
 - codecov
 stages:
-- lint
 - test
 - build
-- doc
 - test_deploy
 - deploy
 jobs:
   include:
-  - stage: lint
-    python: 3.6
-    script:
-    - python setup.py lint || exit $(($? & 35))
   - stage: test
+  - name: "lint"
+    script:
+      - python setup.py lint || exit $(($? & 35))
   - python: 3.5
   - python: 3.7
     dist: xenial
   - stage: build
-    python: 3.6
-    install:
-    - pip install . wheel
+  - name: "sdist"
     script:
-    - python setup.py sdist bdist_wheel
-  - stage: doc
-    python: 3.6
+      - python setup.py sdist
+  - name: "bdist_wheel"
+    install:
+      - pip install . wheel
+    script:
+      - python setup.py bdist_wheel
+  - name: "sphinx docs"
     install:
     - pip install .["docs"]
     script:
