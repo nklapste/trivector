@@ -19,6 +19,7 @@ stages:
   - test
   - build
   - doc
+  - test_deploy
   - deploy
 
 jobs:
@@ -43,14 +44,24 @@ jobs:
         - pip install .["docs"]
       script:
         - sphinx-build docs/ build/
+    - stage: test_deploy
+      python: 3.6
+      deploy:
+        provider: pypi
+        user: nklapste
+        password:
+          secure: UP8MNQxZTpJ/5rsRnpsMLpKuH5dWKypBoNDUvMjKxkCFkVyVmmmudqp0lcE6tNOetrEnDk5N6PIT2j2cTWapZ4gAp56U+m4wrwHBDTp/mUSnPJCtKIVG1qv+0vdUGHpvyHTY1CfP+2dyG6gCoQm9syKOGMD1A3KIgWXNVX9z/KOJwY6UzfzmfgRizjao0yAV2wqYywsJsU8ykS9bt465lD0W27m33SoaAkUnPy2jH56N1Nm7mG7IwB+Mok+6+kSwMnmtAPuABR5F8jGVnY0qhy416x2CXWpkmXpywWWGoAAiu8ala7DOq2z4W8rJNC+AmhygDj3/oGLr8bQckumHvWyWd8GE3IH2F3mi5iYrBGjy/9Puygt+iJqsX2yi5Bv0OxIUMRYLhx4mjS3xt91X+BnmhtORv5JYkcxOeSqy7bIYGgwNx4eYMr0xwZsQ3db6S62CUbrPnse97Sa7WHJL8Z5h1g8TLfPO+jo87zkhTJDwyCq7clkhbnWwJ/dT26I7WpUvpbp7vGOzo6Ee+QtxTHsRTo7st8ShY1URYVQKIL4yG7vfDyPFjPJZpX2PpfrkoWanzvYRIWQpZ0zwC8yCcxIPYgMZdSFhjpuCwdF5qb3H4MyVUb1TuCuzB3Mj1UpqPAa4Axp7b/fUtvEXaLFg3i9SSZQYhH4b6B4kIU8Y/Kw=
+        server: https://test.pypi.org/legacy/
+        distributions: "sdist bdist_wheel"
     - stage: deploy
       python: 3.6
       deploy:
         provider: pypi
         user: nklapste
         password:
-          secure: NSoqctMUAvYFR/HziUJWZQeQKVGKqNJoW7yJiPlDhRsZSkKi5jLrWTB6l/2mpCXYwo5ZZkCQnKyOrdrOnS7v5e/jBIbRxeRQLETeSl+SnKB3DO6o4mW2kZsfsnmmPIuv+x77gh2kofFT3MYNKxjtwMFO2aqNIrc8JhYG+FCe2O+BvQG2A/iE5HTLF1/fSpsJNoxoMarmjQTs3KBifgLUKOt9OJFxG9mClZ4fsQrfGWcZt7jOelXGHENgekOdeNHkGPUcoshLV2psHb+2Yvf+xPIcvXsH9lnmczBnuclj626P7Mm0AWkWg2/2SRSlsyG8j1/qKQ2ynJddVL1U9NaVYcbBV4Ss1F34UEBTTCpMy6e5R4jP0BLsuK4PQatr2S0wU66pbq4fxyAhO1x+7JG4oJzXykHFzRUIvJeGanJoK8dGOYPLhf7Kijvzx2NhFbeqsg/yjlZDoxMjteVF8b4deVpEHQEnNNtbVl/MuDWn5v5x0wMxXpkwVbcf5u1IUKFNRInPCVFFvMT+F45+0DcEjvefumpQ7CTvwiyhnkLxmVIUih6zwyuXuuNihwcuWcVzoicEiiids3ufD70uK5AHuuz1MQSo0bS8vLvhq3xWPocpetHli5kOKSs6DQ5fDrrmEGIzSZ1HjE51BgMO5Z7yj5ljy546l7w2Xr/IscBQauM=
+          secure: UP8MNQxZTpJ/5rsRnpsMLpKuH5dWKypBoNDUvMjKxkCFkVyVmmmudqp0lcE6tNOetrEnDk5N6PIT2j2cTWapZ4gAp56U+m4wrwHBDTp/mUSnPJCtKIVG1qv+0vdUGHpvyHTY1CfP+2dyG6gCoQm9syKOGMD1A3KIgWXNVX9z/KOJwY6UzfzmfgRizjao0yAV2wqYywsJsU8ykS9bt465lD0W27m33SoaAkUnPy2jH56N1Nm7mG7IwB+Mok+6+kSwMnmtAPuABR5F8jGVnY0qhy416x2CXWpkmXpywWWGoAAiu8ala7DOq2z4W8rJNC+AmhygDj3/oGLr8bQckumHvWyWd8GE3IH2F3mi5iYrBGjy/9Puygt+iJqsX2yi5Bv0OxIUMRYLhx4mjS3xt91X+BnmhtORv5JYkcxOeSqy7bIYGgwNx4eYMr0xwZsQ3db6S62CUbrPnse97Sa7WHJL8Z5h1g8TLfPO+jo87zkhTJDwyCq7clkhbnWwJ/dT26I7WpUvpbp7vGOzo6Ee+QtxTHsRTo7st8ShY1URYVQKIL4yG7vfDyPFjPJZpX2PpfrkoWanzvYRIWQpZ0zwC8yCcxIPYgMZdSFhjpuCwdF5qb3H4MyVUb1TuCuzB3Mj1UpqPAa4Axp7b/fUtvEXaLFg3i9SSZQYhH4b6B4kIU8Y/Kw=
         on:
           tags: true
           branch: master
           repo: nklapste/trivector
+        distributions: "sdist bdist_wheel"
