@@ -54,3 +54,4 @@ jobs:
           tags: true
           branch: master
           repo: nklapste/trivector
+        distributions: "sdist bdist_wheel"
