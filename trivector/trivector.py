@@ -72,7 +72,6 @@ def vectorize_sector_left(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y), (x + cut_size, y), (x + cut_size, y + cut_size)],
-            stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
@@ -80,7 +79,6 @@ def vectorize_sector_left(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y), (x, y + cut_size), (x + cut_size, y + cut_size)],
-            stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
@@ -95,7 +93,6 @@ def vectorize_sector_right(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y + cut_size), (x + cut_size, y + cut_size), (x + cut_size, y)],
-            stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
@@ -103,7 +100,6 @@ def vectorize_sector_right(sub_img: np.ndarray, svg_drawing: svgwrite.Drawing,
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y + cut_size), (x, y), (x + cut_size, y)],
-            stroke=svgwrite.rgb(r, g, b, "RGB"),
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
