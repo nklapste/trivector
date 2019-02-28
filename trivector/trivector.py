@@ -130,15 +130,15 @@ def trivector(image_path: str, cut_size: int, output_path: str,
     :param output_path: path to write the trivectored image
     """
     image = cv2.imread(image_path)  # pylint:disable=no-member
-    svg_drawing = svgwrite.Drawing(output_path, profile="full")
 
     height, width, _ = image.shape
 
     width_slices = range(0, width, cut_size)
     height_slices = range(0, height, cut_size)
-    svg_drawing.viewbox(
-        width=len(width_slices)*cut_size,
-        height=len(height_slices)*cut_size
+    svg_drawing = svgwrite.Drawing(
+        output_path,
+        profile="full",
+        size=(len(width_slices)*cut_size, len(height_slices)*cut_size)
     )
 
     # start up the progress bar
