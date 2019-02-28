@@ -146,13 +146,13 @@ def trivector(image_path: str, cut_size: int, output_path: str,
         counter_1 = counter_2
         counter_2 += 1
         for x in width_slices:
-            sub_img = image[y:y + cut_size, x:x + cut_size]
+            sector_image = image[y:y + cut_size, x:x + cut_size]
             if (diagonal_style == DiagonalStyle.left) or \
                     (diagonal_style == DiagonalStyle.alternating and counter_1 % 2):
-                vectorize_sector_left(sub_img, svg_drawing, x, y, cut_size)
+                vectorize_sector_left(sector_image, svg_drawing, x, y, cut_size)
             else:
-                sub_img = np.rot90(sub_img, axes=(0, 1))
-                vectorize_sector_right(sub_img, svg_drawing, x, y, cut_size)
+                sector_image = np.rot90(sector_image, axes=(0, 1))
+                vectorize_sector_right(sector_image, svg_drawing, x, y, cut_size)
             sector_num += 1
             counter_1 += 1
             bar.update(sector_num)
