@@ -1,56 +1,48 @@
 language: python
-
 python: 3.6
-
 before_install:
   - pip install codecov
-
 install:
   - pip install .
-
 script:
   - python setup.py test
-
 after_success:
   - codecov
-
 stages:
-  - lint
   - test
   - build
-  - doc
   - deploy
-
 jobs:
   include:
-    - stage: lint
-      python: 3.6
+    - stage: test
+    - name: "lint"
       script:
         - python setup.py lint || exit $(($? & 35))
-    - stage: test
     - python: 3.5
     - python: 3.7
       dist: xenial
     - stage: build
-      python: 3.6
+      name: "sdist"
+      script:
+        - python setup.py sdist
+    - name: "bdist_wheel"
       install:
         - pip install . wheel
       script:
-        - python setup.py sdist bdist_wheel
-    - stage: doc
-      python: 3.6
+        - python setup.py bdist_wheel
+    - name: "sphinx docs"
       install:
         - pip install .["docs"]
       script:
         - sphinx-build docs/ build/
     - stage: deploy
-      python: 3.6
       deploy:
         provider: pypi
         user: nklapste
         password:
-          secure: NSoqctMUAvYFR/HziUJWZQeQKVGKqNJoW7yJiPlDhRsZSkKi5jLrWTB6l/2mpCXYwo5ZZkCQnKyOrdrOnS7v5e/jBIbRxeRQLETeSl+SnKB3DO6o4mW2kZsfsnmmPIuv+x77gh2kofFT3MYNKxjtwMFO2aqNIrc8JhYG+FCe2O+BvQG2A/iE5HTLF1/fSpsJNoxoMarmjQTs3KBifgLUKOt9OJFxG9mClZ4fsQrfGWcZt7jOelXGHENgekOdeNHkGPUcoshLV2psHb+2Yvf+xPIcvXsH9lnmczBnuclj626P7Mm0AWkWg2/2SRSlsyG8j1/qKQ2ynJddVL1U9NaVYcbBV4Ss1F34UEBTTCpMy6e5R4jP0BLsuK4PQatr2S0wU66pbq4fxyAhO1x+7JG4oJzXykHFzRUIvJeGanJoK8dGOYPLhf7Kijvzx2NhFbeqsg/yjlZDoxMjteVF8b4deVpEHQEnNNtbVl/MuDWn5v5x0wMxXpkwVbcf5u1IUKFNRInPCVFFvMT+F45+0DcEjvefumpQ7CTvwiyhnkLxmVIUih6zwyuXuuNihwcuWcVzoicEiiids3ufD70uK5AHuuz1MQSo0bS8vLvhq3xWPocpetHli5kOKSs6DQ5fDrrmEGIzSZ1HjE51BgMO5Z7yj5ljy546l7w2Xr/IscBQauM=
+          secure: h0o5qy0uVEN4RrEK0Got/dRsiT6cq3PAMBNfMpYYXMdwNpb9TBuhWP+Q1ccD7gmn0PIR7zHvvlRIOfN+pdkKfDe0Gb9WD5Na46oHRFQYm90ioB+YSfoEVN+LMaNLmMu/JHSOojDoieclhQBx8FNT48WZHZ0L/unZxSiRaw2VO4oxDF29MaRAxl4wN6w2AgbQDt5dDsYxE/SOsxfFulB7KzOZ/zAMTBf9EoDZ2HKsbhOZUEYiy0VPYVJxERPMIzO1Zqqq5k9IBkIP4jaTEl7zqRkd0/uVn0x6IZ2EvgysizACdeUsPA/txWRhPRGtRBzRLOigy5lzdqb52PXoB7AJxknmdl1LI0IR0wVIfaztogb3CICub8oLkTpYZXdrfRjGBL1bvEN0MqJeYNPy5YCFw1y914Zov3a0p/zlX3NKrBFjSeuqTGCexatDttoI3wuCpCc/M3t0gWWXHfDx2LSFKcq20rCzuiTTeff6UsiTSrmfQevNjtJC9T+2EYhIJcVvlTKcxolwcGkrifcfyYBE4wIGGuE0Ki+fhfMvgqA6wU0tGC17YIP7T7A+fl46I/xpYydXNAnEFla7WBM7fn/F2N35IL/C7Et4S5QWVZVjAypygDAecG76GeGBmagAsl2AALmFxSl2krRBtFiRRkblHfuiat1ucFO1eJQBvlq0dxk=
         on:
           tags: true
           branch: master
           repo: nklapste/trivector
+        distributions: "sdist bdist_wheel"

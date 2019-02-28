@@ -18,12 +18,11 @@ Convert an image into a SVG vector image composed of triangular sectors.
 Installation
 ============
 
-To install trivector from source, first, clone and enter this repository, then
-run the following pip command:
+trivector can be installed from PyPI with the following command:
 
 .. code-block:: shell
 
-    pip install .
+    pip install trivector
 
 Usage
 =====
@@ -41,9 +40,11 @@ Below is a simple PNG raster image to trivectorize!
 
 .. image:: https://raw.githubusercontent.com/nklapste/trivector/master/examples/meface_before.png
     :width: 250
+    :alt: Before trivector
 
 Running ``trivector meface_before.png meface_after.svg 20`` yields the
 following trivectorized SVG image at ``meface_after.svg``:
 
 .. image:: https://raw.githubusercontent.com/nklapste/trivector/master/examples/meface_after.svg?sanitize=true
     :width: 250
+    :alt: After trivector
