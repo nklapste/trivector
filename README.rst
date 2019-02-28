@@ -18,12 +18,11 @@ Convert an image into a SVG vector image composed of triangular sectors.
 Installation
 ============
 
-To install trivector from source, first, clone and enter this repository, then
-run the following pip command:
+You can install trivector from pypi with the following command:
 
 .. code-block:: shell
 
-    pip install .
+    pip install trivector
 
 Usage
 =====
