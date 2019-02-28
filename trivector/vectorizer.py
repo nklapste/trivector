@@ -4,7 +4,7 @@
 """Image conversion functionality for trivector"""
 
 from enum import Enum
-from typing import List, Generator, Tuple
+from typing import Generator, Tuple
 
 import numpy as np
 import svgwrite
@@ -18,10 +18,10 @@ def upper_tri_sum(d3array: np.ndarray) -> np.ndarray:
 
     :param d3array: 3D image array derived from :func:`cv2.imread`
 
-    Treat the 3D array as 2d array. Having the innermost array (pixel BGR
+    Treat the 3D array as 2d array. Having the innermost array (pixel RGB
     values) be considered base values to be averaged.
 
-    :return: BGR array of the average color of the upper diagonal of the
+    :return: RGB array of the average color of the upper diagonal of the
         3D image array
     """
     x, y, _ = d3array.shape
@@ -39,7 +39,7 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
 
     :param d3array: 3D image array derived from :func:`cv2.imread`
 
-    Treat the 3D array as 2d array. Having the innermost array (pixel BGR
+    Treat the 3D array as 2d array. Having the innermost array (pixel RGB
     values) be considered base values to be averaged.
 
     .. note::
@@ -47,7 +47,7 @@ def lower_tri_sum(d3array: np.ndarray) -> np.ndarray:
         If the lower diagonal cannot be computed (eg: flat/malformed 3D array)
         use the 3D image array's upper diagonal's pixel color average instead.
 
-    :return: BGR array of the average color of the lower diagonal of the
+    :return: RGB array of the average color of the lower diagonal of the
         3D image array
     """
     x, y, _ = d3array.shape
@@ -68,16 +68,16 @@ def vectorize_sector_left(sub_img: np.ndarray,
                           svg_drawing: svgwrite.Drawing,
                           x: int, y: int, sector_size: int):
     """Add two triangles to ``svg_drawing`` whose colors are derived from
-    the color averages from the top and bottom diagonals of the 3D BGR image
+    the color averages from the top and bottom diagonals of the 3D RGB image
     array of the sub image"""
-    b, g, r = upper_tri_sum(sub_img)
+    r, g, b = upper_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y), (x + sector_size, y), (x + sector_size, y + sector_size)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
-    b, g, r = lower_tri_sum(sub_img)
+    r, g, b = lower_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y), (x, y + sector_size), (x + sector_size, y + sector_size)],
@@ -90,17 +90,17 @@ def vectorize_sector_right(sub_img: np.ndarray,
                            svg_drawing: svgwrite.Drawing,
                            x: int, y: int, sector_size: int):
     """Add two triangles to ``svg_drawing`` whose colors are derived from
-    the color averages from the top and bottom diagonals of the 3D BGR image
+    the color averages from the top and bottom diagonals of the 3D RGB image
     array of the sub image"""
     sub_img = np.rot90(sub_img, axes=(0, 1))
-    b, g, r = upper_tri_sum(sub_img)
+    r, g, b = upper_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y + sector_size), (x + sector_size, y + sector_size), (x + sector_size, y)],
             fill=svgwrite.rgb(r, g, b, "RGB")
         )
     )
-    b, g, r = lower_tri_sum(sub_img)
+    r, g, b = lower_tri_sum(sub_img)
     svg_drawing.add(
         svg_drawing.polygon(
             [(x, y + sector_size), (x, y), (x + sector_size, y)],
@@ -123,7 +123,7 @@ class DiagonalStyle(Enum):
 
 class Vectorizer:
     def __init__(self, image_path: str, sector_size: int, **kwargs):
-        self.image = cv2.imread(image_path)  # pylint: disable=no-member
+        self.image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_RGB2RGB)  # pylint: disable=no-member
         self.sector_size = sector_size
 
         height, width, _ = self.image.shape
@@ -179,7 +179,7 @@ class TriVectorizer(Vectorizer):
 def square_vectorize_sector(sector_image: np.ndarray,
                             svg_drawing: svgwrite.Drawing,
                             x: int, y: int, sector_size: int):
-    b, g, r = np.average(sector_image, (0, 1))
+    r, g, b = np.average(sector_image, (0, 1))
     svg_drawing.add(
         Rect(
             insert=(x, y),
@@ -203,7 +203,7 @@ class SquareVectorizer(Vectorizer):
 def circle_vectorize_sector(sector_image: np.ndarray,
                             svg_drawing: svgwrite.Drawing,
                             x: int, y: int, sector_size: int):
-    b, g, r = np.average(sector_image, (0, 1))
+    r, g, b = np.average(sector_image, (0, 1))
     svg_drawing.add(
         Circle(
             center=(x + (sector_size / 2), y + (sector_size / 2)),
