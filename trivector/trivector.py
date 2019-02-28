@@ -11,6 +11,7 @@ import svgwrite
 
 import cv2
 import progressbar
+from svgwrite.shapes import Rect, Circle
 
 
 def bgr_value_average(bgr_values: List[np.ndarray]) -> np.ndarray:
@@ -158,7 +159,6 @@ class Vectorizer:
 
 
 class TriVectorizer(Vectorizer):
-
     def __init__(self, diagonal_style: DiagonalStyle = DiagonalStyle.left_alternating, **kwargs):
         self.diagonal_style = diagonal_style
         super().__init__(**kwargs)
@@ -181,4 +181,47 @@ class TriVectorizer(Vectorizer):
                 sector_image = np.rot90(sector_image, axes=(0, 1))
                 vectorize_sector_right(sector_image, self.svg_drawing, x, y,
                                        self.sector_size)
+        return self.svg_drawing
+
+
+def square_vectorize_sector(sector_image: np.ndarray, svg_drawing: svgwrite.Drawing, x: int, y: int, sector_size: int):
+    b, g, r = np.average(sector_image, (0, 1))
+    svg_drawing.add(
+        Rect(
+            insert=(x, y),
+            size=(sector_size, sector_size),
+            fill=svgwrite.rgb(r, g, b, "RGB")
+        )
+    )
+
+
+class SquareVectorizer(Vectorizer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def vectorize(self):
+        for x, y, sector_image in self.sectors:
+            square_vectorize_sector(sector_image, self.svg_drawing, x, y, self.sector_size)
+        return self.svg_drawing
+
+
+def circle_vectorize_sector(sector_image: np.ndarray, svg_drawing: svgwrite.Drawing, x: int, y: int, sector_size: int):
+    b, g, r = np.average(sector_image, (0, 1))
+    svg_drawing.add(
+        Circle(
+            center=(x + (sector_size / 2), y + (sector_size / 2)),
+            r=sector_size / 1.3,
+            fill=svgwrite.rgb(r, g, b, "RGB")
+        )
+    )
+
+
+class CircleVectorizer(Vectorizer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def vectorize(self):
+        for x, y, sector_image in self.sectors:
+            circle_vectorize_sector(
+                sector_image, self.svg_drawing, x, y, self.sector_size)
         return self.svg_drawing
